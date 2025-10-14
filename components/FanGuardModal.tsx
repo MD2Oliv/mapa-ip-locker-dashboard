@@ -1,5 +1,7 @@
 'use client'
 
+import { useEffect } from 'react'
+
 export default function FanGuardModal() {
   const closeModal = () => {
     const modal = document.getElementById('fanGuardModal')
@@ -12,8 +14,31 @@ export default function FanGuardModal() {
     window.open('https://blocksurvey.io/mapanile-athlete-nil-intake-qrO7P.cAQEe2yMACIZTkZA?v=o', '_blank')
   }
 
+  // Close modal when clicking outside
+  const handleBackdropClick = (e: React.MouseEvent) => {
+    if (e.target === e.currentTarget) {
+      closeModal()
+    }
+  }
+
+  // Close modal with Escape key
+  useEffect(() => {
+    const handleEscape = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') {
+        closeModal()
+      }
+    }
+
+    document.addEventListener('keydown', handleEscape)
+    return () => document.removeEventListener('keydown', handleEscape)
+  }, [])
+
   return (
-    <div className="modal" id="fanGuardModal">
+    <div 
+      className="modal" 
+      id="fanGuardModal"
+      onClick={handleBackdropClick}
+    >
       <div className="modal-content">
         <div className="modal-header">
           <h3>Fan Guard Fund</h3>
@@ -34,8 +59,8 @@ export default function FanGuardModal() {
             <button className="btn btn-primary" onClick={openBlocksurvey}>
               Join Waitlist
             </button>
-            <button className="btn btn-secondary">
-              Learn More
+            <button className="btn btn-secondary" onClick={closeModal}>
+              Close
             </button>
           </div>
         </div>

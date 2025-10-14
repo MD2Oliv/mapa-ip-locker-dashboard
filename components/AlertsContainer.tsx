@@ -1,17 +1,35 @@
 'use client'
 
-interface AlertsContainerProps {
-  alerts: any[]
+import { useState } from 'react'
+
+interface Alert {
+  id: string
+  type: string
+  title: string
+  message: string
+  actions: string[]
 }
 
-export default function AlertsContainer({ alerts }: AlertsContainerProps) {
+interface AlertsContainerProps {
+  alerts: Alert[]
+}
+
+export default function AlertsContainer({ alerts: initialAlerts }: AlertsContainerProps) {
+  const [alerts, setAlerts] = useState<Alert[]>(initialAlerts)
+
   const dismissAlert = (alertId: string) => {
-    // In a real app, you'd update state here
-    console.log('Dismissing alert:', alertId)
+    setAlerts(prevAlerts => prevAlerts.filter(alert => alert.id !== alertId))
   }
 
   const handleAlertAction = (alertId: string, action: string) => {
     console.log(`Alert action: ${action} for alert: ${alertId}`)
+    // After action, dismiss the alert
+    dismissAlert(alertId)
+  }
+
+  // Don't render if no alerts
+  if (alerts.length === 0) {
+    return null
   }
 
   return (
@@ -23,6 +41,7 @@ export default function AlertsContainer({ alerts }: AlertsContainerProps) {
             <button 
               className="alert-close" 
               onClick={() => dismissAlert(alert.id)}
+              aria-label="Close alert"
             >
               <i className="fas fa-times"></i>
             </button>
