@@ -1,0 +1,541 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mapa IP Locker Dashboard</title>
+    <link rel="stylesheet" href="styles.css">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+</head>
+<body>
+    <div class="app-container">
+        <!-- Header -->
+        <header class="header">
+            <div class="header-content">
+                <div class="logo">
+                    <i class="fas fa-shield-alt"></i>
+                    <span>Mapa IP Locker</span>
+                </div>
+                <div class="user-info">
+                    <div class="user-avatar alert-badge" id="alertBadge">
+                        <i class="fas fa-user"></i>
+                    </div>
+                    <div class="user-details">
+                        <span class="user-name">Alex Johnson</span>
+                        <span class="user-role" id="userRole">Athlete</span>
+                    </div>
+                    <button class="role-switch" id="roleSwitch">
+                        <i class="fas fa-exchange-alt"></i>
+                    </button>
+                </div>
+            </div>
+        </header>
+
+        <!-- Alerts Container -->
+        <div class="alerts-container" id="alertsContainer">
+            <!-- Alerts will be dynamically added here -->
+        </div>
+
+        <!-- Dashboard Container -->
+        <div class="dashboard-container">
+            <!-- Navigation Tabs -->
+            <nav class="nav-tabs" id="navTabs">
+                <!-- Athlete tabs -->
+                <div class="tab-group athlete-tabs">
+                    <button class="tab active" data-tab="timeline">IP Locker Timeline</button>
+                    <button class="tab" data-tab="assets">Assets & Rights</button>
+                    <button class="tab" data-tab="contracts">Contracts</button>
+                    <button class="tab" data-tab="approvals">Approvals</button>
+                    <button class="tab" data-tab="valuation">Valuation & Tier</button>
+                    <button class="tab" data-tab="requests">Requests Inbox</button>
+                </div>
+                <!-- Vendor tabs -->
+                <div class="tab-group vendor-tabs" style="display: none;">
+                    <button class="tab active" data-tab="vendor-requests">Requests & Approvals</button>
+                    <button class="tab" data-tab="licensed-assets">Licensed Assets</button>
+                    <button class="tab" data-tab="campaign-analytics">Campaign Analytics</button>
+                    <button class="tab" data-tab="vendor-library">Vendor IP Library</button>
+                    <button class="tab" data-tab="integration-health">Integration Health</button>
+                </div>
+            </nav>
+
+            <!-- Dashboard Content -->
+            <main class="dashboard-content">
+                <!-- Athlete Dashboard -->
+                <div class="dashboard athlete-dashboard" id="athleteDashboard">
+                    <!-- Top Summary Bar -->
+                    <div class="summary-bar">
+                        <div class="summary-card">
+                            <div class="summary-label">Tier & Valuation</div>
+                            <div class="summary-content">
+                                <span class="tier-badge">Gold</span>
+                                <span class="valuation">$2.4M</span>
+                                <span class="delta positive">+12%</span>
+                            </div>
+                        </div>
+                        <div class="summary-card">
+                            <div class="summary-label">Contracts</div>
+                            <div class="summary-content">
+                                <span class="count active">8 Active</span>
+                                <span class="count pending">3 Pending Renewal</span>
+                                <span class="count expired">2 Expired</span>
+                            </div>
+                        </div>
+                        <div class="summary-card">
+                            <div class="summary-label">Assets</div>
+                            <div class="summary-content">
+                                <span class="count active">24 Total Tagged</span>
+                                <span class="count pending">5 Pending Approval</span>
+                                <span class="count expired">1 Rights Conflict</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- IP Locker Timeline -->
+                    <div class="widget" id="timelineWidget">
+                        <div class="widget-header">
+                            <h2>IP Locker Timeline</h2>
+                            <div class="widget-actions">
+                                <select class="filter-select" data-filter="type">
+                                    <option>All Types</option>
+                                    <option>Contract</option>
+                                    <option>Asset</option>
+                                    <option>Approval</option>
+                                </select>
+                                <select class="filter-select" data-filter="status">
+                                    <option>All Status</option>
+                                    <option>Active</option>
+                                    <option>Pending</option>
+                                    <option>Expired</option>
+                                    <option>Blocked</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="timeline-table">
+                            <table>
+                                <thead>
+                                    <tr>
+                                        <th>Date</th>
+                                        <th>Item Type</th>
+                                        <th>Title</th>
+                                        <th>Status</th>
+                                        <th>Linked Items</th>
+                                        <th>Actions</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="timelineTableBody">
+                                    <!-- Timeline data will be populated by JavaScript -->
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+
+                    <!-- Assets & Rights -->
+                    <div class="widget" id="assetsWidget" style="display: none;">
+                        <div class="widget-header">
+                            <h2>Assets & Rights</h2>
+                            <div class="widget-actions">
+                                <button class="btn btn-primary">
+                                    <i class="fas fa-upload"></i> Upload Asset
+                                </button>
+                                <button class="btn btn-secondary">
+                                    <i class="fas fa-tag"></i> Tag Rights
+                                </button>
+                                <button class="btn btn-secondary">
+                                    <i class="fas fa-user-shield"></i> Request Guardian Approval
+                                </button>
+                            </div>
+                        </div>
+                        <div class="assets-table">
+                            <table>
+                                <thead>
+                                    <tr>
+                                        <th>Asset Name</th>
+                                        <th>Rights</th>
+                                        <th>Expiration</th>
+                                        <th>Guardian Status</th>
+                                        <th>Linked Contracts</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="assetsTableBody">
+                                    <!-- Assets data will be populated by JavaScript -->
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+
+                    <!-- Contracts -->
+                    <div class="widget" id="contractsWidget" style="display: none;">
+                        <div class="widget-header">
+                            <h2>Contracts</h2>
+                            <div class="widget-actions">
+                                <button class="btn btn-primary">
+                                    <i class="fas fa-upload"></i> Upload Contract
+                                </button>
+                                <button class="btn btn-secondary">
+                                    <i class="fas fa-link"></i> Link Assets
+                                </button>
+                            </div>
+                        </div>
+                        <div class="contracts-table">
+                            <table>
+                                <thead>
+                                    <tr>
+                                        <th>Contract Name</th>
+                                        <th>Partner</th>
+                                        <th>Term Start-End</th>
+                                        <th>Status</th>
+                                        <th>Linked Assets</th>
+                                        <th>Next Action</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="contractsTableBody">
+                                    <!-- Contracts data will be populated by JavaScript -->
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+
+                    <!-- Approvals -->
+                    <div class="widget" id="approvalsWidget" style="display: none;">
+                        <div class="widget-header">
+                            <h2>Guardian Approvals</h2>
+                            <div class="widget-actions">
+                                <button class="btn btn-secondary">
+                                    <i class="fas fa-paper-plane"></i> Resend Approval
+                                </button>
+                                <button class="btn btn-secondary">
+                                    <i class="fas fa-edit"></i> Edit Rights
+                                </button>
+                            </div>
+                        </div>
+                        <div class="approvals-cards" id="approvalsCards">
+                            <!-- Approval cards will be populated by JavaScript -->
+                        </div>
+                    </div>
+
+                    <!-- Valuation & Tier -->
+                    <div class="widget" id="valuationWidget" style="display: none;">
+                        <div class="widget-header">
+                            <h2>Valuation & Tier</h2>
+                            <div class="widget-actions">
+                                <button class="btn btn-primary">
+                                    <i class="fas fa-download"></i> Download Report
+                                </button>
+                            </div>
+                        </div>
+                        <div class="valuation-content">
+                            <div class="metrics-grid">
+                                <div class="metric-card">
+                                    <div class="metric-label">Rights Ownership Index</div>
+                                    <div class="metric-value">87%</div>
+                                    <div class="metric-description">Percentage of assets with verified ownership</div>
+                                </div>
+                                <div class="metric-card">
+                                    <div class="metric-label">Verified Revenue Actions</div>
+                                    <div class="metric-value">156</div>
+                                    <div class="metric-description">Total monetization activities completed</div>
+                                </div>
+                                <div class="metric-card">
+                                    <div class="metric-label">Engagement Integrity</div>
+                                    <div class="metric-value">94%</div>
+                                    <div class="metric-description">Authentic engagement vs. bot activity</div>
+                                </div>
+                                <div class="metric-card">
+                                    <div class="metric-label">Composite NIL Value</div>
+                                    <div class="metric-value">$2.4M</div>
+                                    <div class="metric-description">Total estimated NIL valuation</div>
+                                </div>
+                            </div>
+                            <div class="tier-progress">
+                                <div class="progress-header">
+                                    <div class="progress-label">Progress to Platinum Tier</div>
+                                    <div class="current-tier">Gold</div>
+                                </div>
+                                <div class="progress-bar-container">
+                                    <div class="progress-bar">
+                                        <div class="progress-fill" style="width: 75%"></div>
+                                    </div>
+                                </div>
+                                <div class="progress-text">
+                                    <div class="progress-percentage">75% Complete</div>
+                                    <div class="next-tier">Next: Platinum Tier</div>
+                                </div>
+                                <div class="unlock-criteria">
+                                    <div class="unlock-criteria-title">Unlock Criteria for Platinum Tier:</div>
+                                    <ul class="unlock-criteria-list">
+                                        <li class="unlock-criteria-item completed">Complete 150+ verified revenue actions</li>
+                                        <li class="unlock-criteria-item completed">Maintain 90%+ engagement integrity</li>
+                                        <li class="unlock-criteria-item pending">Complete 3 more verified revenue actions</li>
+                                        <li class="unlock-criteria-item pending">Add 2 more exclusive asset rights</li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Requests Inbox -->
+                    <div class="widget" id="requestsWidget" style="display: none;">
+                        <div class="widget-header">
+                            <h2>Requests Inbox</h2>
+                            <div class="widget-actions">
+                                <button class="btn btn-primary" id="fanGuardFundBtn">
+                                    <i class="fas fa-shield-alt"></i> Fan Guard Fund
+                                </button>
+                            </div>
+                        </div>
+                        <div class="fan-guard-integration">
+                            <h3>Enhanced Protection Available</h3>
+                            <p>Fan Guard Fund provides additional protection and monetization opportunities for your intellectual property.</p>
+                            <button class="btn" onclick="openModal()">
+                                <i class="fas fa-shield-alt"></i> Learn More
+                            </button>
+                        </div>
+                        <div class="requests-table">
+                            <table>
+                                <thead>
+                                    <tr>
+                                        <th>Vendor</th>
+                                        <th>Asset Requested</th>
+                                        <th>Rights Scope</th>
+                                        <th>Duration</th>
+                                        <th>Due</th>
+                                        <th>Actions</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="requestsTableBody">
+                                    <!-- Requests data will be populated by JavaScript -->
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Vendor Dashboard -->
+                <div class="dashboard vendor-dashboard" id="vendorDashboard" style="display: none;">
+                    <!-- Top Summary Bar -->
+                    <div class="summary-bar">
+                        <div class="summary-card">
+                            <div class="summary-label">Integration Status</div>
+                            <div class="summary-content">
+                                <span class="status-badge healthy">Analytics</span>
+                                <span class="status-badge healthy">Payments</span>
+                            </div>
+                        </div>
+                        <div class="summary-card">
+                            <div class="summary-label">Licenses</div>
+                            <div class="summary-content">
+                                <span class="count active">12 Active</span>
+                                <span class="count pending">4 Pending Approval</span>
+                                <span class="count expired">3 Expired</span>
+                            </div>
+                        </div>
+                        <div class="summary-card">
+                            <div class="summary-label">Campaigns</div>
+                            <div class="summary-content">
+                                <span class="count active">8 Live</span>
+                                <span class="count pending">5 Scheduled</span>
+                                <span class="count">23 Completed</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Requests & Approvals -->
+                    <div class="widget" id="vendorRequestsWidget">
+                        <div class="widget-header">
+                            <h2>Requests & Approvals</h2>
+                            <div class="widget-actions">
+                                <button class="btn btn-primary">
+                                    <i class="fas fa-search"></i> Find Athlete & Request Asset
+                                </button>
+                            </div>
+                        </div>
+                        <div class="vendor-requests-table">
+                            <table>
+                                <thead>
+                                    <tr>
+                                        <th>Athlete</th>
+                                        <th>Asset</th>
+                                        <th>Requested Rights</th>
+                                        <th>Duration</th>
+                                        <th>Status</th>
+                                        <th>SLA Countdown</th>
+                                        <th>Actions</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="vendorRequestsTableBody">
+                                    <!-- Vendor requests data will be populated by JavaScript -->
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+
+                    <!-- Licensed Assets -->
+                    <div class="widget" id="licensedAssetsWidget" style="display: none;">
+                        <div class="widget-header">
+                            <h2>Licensed Assets</h2>
+                            <div class="widget-actions">
+                                <button class="btn btn-primary">
+                                    <i class="fas fa-sync"></i> Renew License
+                                </button>
+                                <button class="btn btn-secondary">
+                                    <i class="fas fa-image"></i> Replace Creative
+                                </button>
+                            </div>
+                        </div>
+                        <div class="licensed-assets-table">
+                            <table>
+                                <thead>
+                                    <tr>
+                                        <th>Asset</th>
+                                        <th>Athlete</th>
+                                        <th>License Type</th>
+                                        <th>Start-End</th>
+                                        <th>Watermark</th>
+                                        <th>Compliance Status</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="licensedAssetsTableBody">
+                                    <!-- Licensed assets data will be populated by JavaScript -->
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+
+                    <!-- Campaign Analytics -->
+                    <div class="widget" id="campaignAnalyticsWidget" style="display: none;">
+                        <div class="widget-header">
+                            <h2>Campaign Analytics</h2>
+                            <div class="widget-actions">
+                                <button class="btn btn-primary">
+                                    <i class="fas fa-download"></i> Export CSV
+                                </button>
+                            </div>
+                        </div>
+                        <div class="analytics-cards">
+                            <div class="analytics-card">
+                                <div class="analytics-label">Impressions</div>
+                                <div class="analytics-value">2.4M</div>
+                                <div class="analytics-change positive">+15%</div>
+                            </div>
+                            <div class="analytics-card">
+                                <div class="analytics-label">CTR</div>
+                                <div class="analytics-value">3.2%</div>
+                                <div class="analytics-change positive">+8%</div>
+                            </div>
+                            <div class="analytics-card">
+                                <div class="analytics-label">Conversions</div>
+                                <div class="analytics-value">1,247</div>
+                                <div class="analytics-change positive">+22%</div>
+                            </div>
+                            <div class="analytics-card">
+                                <div class="analytics-label">Attribution</div>
+                                <div class="analytics-value">89%</div>
+                                <div class="analytics-change positive">+5%</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Vendor IP Library -->
+                    <div class="widget" id="vendorLibraryWidget" style="display: none;">
+                        <div class="widget-header">
+                            <h2>Vendor IP Library</h2>
+                            <div class="widget-actions">
+                                <button class="btn btn-primary">
+                                    <i class="fas fa-upload"></i> Upload Asset
+                                </button>
+                                <button class="btn btn-secondary">
+                                    <i class="fas fa-check-circle"></i> Verify Ownership
+                                </button>
+                            </div>
+                        </div>
+                        <div class="vendor-library-table">
+                            <table>
+                                <thead>
+                                    <tr>
+                                        <th>Logo/Visual</th>
+                                        <th>Type</th>
+                                        <th>Ownership Verified</th>
+                                        <th>Approved Uses</th>
+                                        <th>Linked Campaigns</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="vendorLibraryTableBody">
+                                    <!-- Vendor library data will be populated by JavaScript -->
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+
+                    <!-- Integration Health -->
+                    <div class="widget" id="integrationHealthWidget" style="display: none;">
+                        <div class="widget-header">
+                            <h2>Integration Health</h2>
+                        </div>
+                        <div class="integration-status">
+                            <div class="integration-item">
+                                <div class="integration-name">Analytics API</div>
+                                <div class="integration-status-badge healthy">Connected</div>
+                                <div class="integration-details">Last sync: 2 minutes ago</div>
+                            </div>
+                            <div class="integration-item">
+                                <div class="integration-name">Payments API</div>
+                                <div class="integration-status-badge healthy">Connected</div>
+                                <div class="integration-details">Last sync: 5 minutes ago</div>
+                            </div>
+                            <div class="integration-item">
+                                <div class="integration-name">Asset Management</div>
+                                <div class="integration-status-badge warning">Limited</div>
+                                <div class="integration-details">Some features unavailable</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </main>
+        </div>
+
+        <!-- Fan Guard Fund Modal -->
+        <div class="modal" id="fanGuardModal">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h3>Fan Guard Fund</h3>
+                    <button class="modal-close" id="closeFanGuardModal">
+                        <i class="fas fa-times"></i>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div class="nile-logo">
+                        <div class="nile-symbol">
+                            <div class="triangle-outer"></div>
+                            <div class="triangle-inner"></div>
+                        </div>
+                        <div class="nile-text">NILE INS</div>
+                    </div>
+                    <p>Fan Guard Fund provides additional protection and monetization opportunities for your intellectual property.</p>
+                    <div class="modal-actions">
+                        <button class="btn btn-primary">Join Waitlist</button>
+                        <button class="btn btn-secondary">Learn More</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Detail Drawer -->
+    <div class="detail-drawer-overlay" id="detailDrawerOverlay"></div>
+    <div class="detail-drawer" id="detailDrawer">
+        <div class="detail-drawer-header">
+            <button class="detail-drawer-close" id="detailDrawerClose">
+                <i class="fas fa-times"></i>
+            </button>
+            <div class="detail-drawer-title" id="detailDrawerTitle">Asset Details</div>
+            <div class="detail-drawer-subtitle" id="detailDrawerSubtitle">View and manage asset information</div>
+        </div>
+        <div class="detail-drawer-content" id="detailDrawerContent">
+            <!-- Content will be dynamically populated -->
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>

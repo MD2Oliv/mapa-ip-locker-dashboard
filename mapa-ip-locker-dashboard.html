@@ -1,0 +1,3094 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MAPA IP Locker Dashboard</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        /* Reset and Base Styles */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            background-color: #f8fafc;
+            color: #1e293b;
+            line-height: 1.6;
+        }
+
+        /* Header */
+        .header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 1rem 0;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .header-content {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 0 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-size: 1.5rem;
+            font-weight: 700;
+        }
+
+        .logo i {
+            font-size: 2rem;
+        }
+
+        .user-info {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .user-avatar {
+            width: 40px;
+            height: 40px;
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .user-details {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .user-name {
+            font-weight: 600;
+        }
+
+        .user-role {
+            font-size: 0.875rem;
+            opacity: 0.8;
+        }
+
+        .role-switch {
+            background: rgba(255, 255, 255, 0.2);
+            border: none;
+            color: white;
+            padding: 0.5rem;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: background-color 0.2s;
+        }
+
+        .role-switch:hover {
+            background: rgba(255, 255, 255, 0.3);
+        }
+
+        /* Dashboard Container */
+        .dashboard-container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+
+        /* Navigation Tabs */
+        .nav-tabs {
+            margin-bottom: 2rem;
+            border-bottom: 2px solid #e2e8f0;
+        }
+
+        .tab-group {
+            display: flex;
+            gap: 0.5rem;
+        }
+
+        .tab {
+            background: none;
+            border: none;
+            padding: 1rem 1.5rem;
+            cursor: pointer;
+            border-bottom: 3px solid transparent;
+            transition: all 0.2s;
+            font-weight: 500;
+            color: #64748b;
+        }
+
+        .tab:hover {
+            color: #334155;
+            background-color: #f1f5f9;
+        }
+
+        .tab.active {
+            color: #667eea;
+            border-bottom-color: #667eea;
+            background-color: #f8fafc;
+        }
+
+        /* Summary Bar */
+        .summary-bar {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .summary-card {
+            background: white;
+            padding: 1.5rem;
+            border-radius: 12px;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+            border: 1px solid #e2e8f0;
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+
+        .summary-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+        }
+
+        .summary-label {
+            font-size: 0.875rem;
+            color: #64748b;
+            margin-bottom: 0.75rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        .summary-content {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 1rem;
+            align-items: center;
+        }
+
+        .tier-badge {
+            background: linear-gradient(135deg, #fbbf24, #f59e0b);
+            color: white;
+            padding: 0.5rem 1rem;
+            border-radius: 25px;
+            font-size: 0.875rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            box-shadow: 0 2px 4px rgba(251, 191, 36, 0.3);
+        }
+
+        .valuation {
+            font-size: 2rem;
+            font-weight: 800;
+            color: #059669;
+            text-shadow: 0 1px 2px rgba(5, 150, 105, 0.1);
+        }
+
+        .delta {
+            font-size: 0.875rem;
+            font-weight: 700;
+            padding: 0.375rem 0.75rem;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            gap: 0.25rem;
+        }
+
+        .delta.positive {
+            background: #dcfce7;
+            color: #166534;
+        }
+
+        .delta.positive::before {
+            content: '↗';
+            font-size: 1rem;
+        }
+
+        .count {
+            font-size: 0.875rem;
+            color: #374151;
+            font-weight: 600;
+            padding: 0.25rem 0.5rem;
+            background: #f8fafc;
+            border-radius: 6px;
+            border: 1px solid #e2e8f0;
+        }
+
+        .count.active {
+            background: #dcfce7;
+            color: #166534;
+            border-color: #bbf7d0;
+        }
+
+        .count.pending {
+            background: #fef3c7;
+            color: #92400e;
+            border-color: #fde68a;
+        }
+
+        .count.expired {
+            background: #fee2e2;
+            color: #dc2626;
+            border-color: #fecaca;
+        }
+
+        .status-badge {
+            padding: 0.375rem 0.75rem;
+            border-radius: 20px;
+            font-size: 0.875rem;
+            font-weight: 600;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.25rem;
+        }
+
+        .status-badge.healthy {
+            background: #dcfce7;
+            color: #166534;
+        }
+
+        .status-badge.healthy::before {
+            content: '✓';
+            font-weight: 700;
+        }
+
+        /* Widgets */
+        .widget {
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+            border: 1px solid #e2e8f0;
+            margin-bottom: 2rem;
+        }
+
+        .widget-header {
+            padding: 1.5rem;
+            border-bottom: 1px solid #e2e8f0;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .widget-header h2 {
+            font-size: 1.25rem;
+            font-weight: 600;
+            color: #1e293b;
+        }
+
+        .widget-actions {
+            display: flex;
+            gap: 0.75rem;
+            align-items: center;
+        }
+
+        /* Buttons */
+        .btn {
+            padding: 0.5rem 1rem;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 500;
+            font-size: 0.875rem;
+            transition: all 0.2s;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .btn-primary {
+            background: #667eea;
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background: #5a67d8;
+            transform: translateY(-1px);
+        }
+
+        .btn-secondary {
+            background: #f1f5f9;
+            color: #475569;
+            border: 1px solid #e2e8f0;
+        }
+
+        .btn-secondary:hover {
+            background: #e2e8f0;
+            transform: translateY(-1px);
+        }
+
+        /* Tables */
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        th, td {
+            padding: 1rem;
+            text-align: left;
+            border-bottom: 1px solid #e2e8f0;
+        }
+
+        th {
+            background: #f8fafc;
+            font-weight: 600;
+            color: #374151;
+            font-size: 0.875rem;
+        }
+
+        td {
+            font-size: 0.875rem;
+        }
+
+        tr:hover {
+            background: #f8fafc;
+        }
+
+        /* Status badges in tables */
+        .status-active {
+            background: #dcfce7;
+            color: #166534;
+            padding: 0.375rem 0.75rem;
+            border-radius: 8px;
+            font-size: 0.75rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.025em;
+        }
+
+        .status-pending {
+            background: #fef3c7;
+            color: #92400e;
+            padding: 0.375rem 0.75rem;
+            border-radius: 8px;
+            font-size: 0.75rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.025em;
+        }
+
+        .status-expired {
+            background: #fee2e2;
+            color: #dc2626;
+            padding: 0.375rem 0.75rem;
+            border-radius: 8px;
+            font-size: 0.75rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.025em;
+        }
+
+        .status-blocked {
+            background: #f3f4f6;
+            color: #6b7280;
+            padding: 0.375rem 0.75rem;
+            border-radius: 8px;
+            font-size: 0.75rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.025em;
+        }
+
+        .status-contract {
+            background: #dbeafe;
+            color: #1e40af;
+            padding: 0.25rem 0.5rem;
+            border-radius: 6px;
+            font-size: 0.75rem;
+            font-weight: 600;
+        }
+
+        .status-asset {
+            background: #f0fdf4;
+            color: #166534;
+            padding: 0.25rem 0.5rem;
+            border-radius: 6px;
+            font-size: 0.75rem;
+            font-weight: 600;
+        }
+
+        .status-approval {
+            background: #fef3c7;
+            color: #92400e;
+            padding: 0.25rem 0.5rem;
+            border-radius: 6px;
+            font-size: 0.75rem;
+            font-weight: 600;
+        }
+
+        /* Filter selects */
+        .filter-select {
+            padding: 0.5rem 0.75rem;
+            border: 1px solid #e2e8f0;
+            border-radius: 8px;
+            background: white;
+            font-size: 0.875rem;
+            font-weight: 500;
+            color: #374151;
+            cursor: pointer;
+            transition: border-color 0.2s, box-shadow 0.2s;
+        }
+
+        .filter-select:hover {
+            border-color: #667eea;
+        }
+
+        .filter-select:focus {
+            outline: none;
+            border-color: #667eea;
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+        }
+
+        /* Action buttons in tables */
+        .action-buttons {
+            display: flex;
+            gap: 0.5rem;
+            flex-wrap: wrap;
+        }
+
+        .action-btn {
+            padding: 0.25rem 0.5rem;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 0.75rem;
+            font-weight: 600;
+            transition: all 0.2s;
+            text-transform: uppercase;
+            letter-spacing: 0.025em;
+        }
+
+        .action-btn.view {
+            background: #dbeafe;
+            color: #1e40af;
+        }
+
+        .action-btn.view:hover {
+            background: #bfdbfe;
+            transform: translateY(-1px);
+        }
+
+        .action-btn.link {
+            background: #dcfce7;
+            color: #166534;
+        }
+
+        .action-btn.link:hover {
+            background: #bbf7d0;
+            transform: translateY(-1px);
+        }
+
+        .action-btn.renew {
+            background: #fef3c7;
+            color: #92400e;
+        }
+
+        .action-btn.renew:hover {
+            background: #fde68a;
+            transform: translateY(-1px);
+        }
+
+        .action-btn.share-disabled {
+            background: #f3f4f6;
+            color: #9ca3af;
+            cursor: not-allowed;
+        }
+
+        .action-btn.resend {
+            background: #e0e7ff;
+            color: #3730a3;
+        }
+
+        .action-btn.resend:hover {
+            background: #c7d2fe;
+            transform: translateY(-1px);
+        }
+
+        /* Approvals Cards */
+        .approvals-cards {
+            padding: 1.5rem;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+            gap: 1.5rem;
+        }
+
+        .approval-card {
+            background: white;
+            padding: 1.5rem;
+            border-radius: 12px;
+            border: 1px solid #e2e8f0;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+            transition: transform 0.2s, box-shadow 0.2s;
+            position: relative;
+        }
+
+        .approval-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+        }
+
+        .approval-card.blocked {
+            border-left: 4px solid #ef4444;
+            background: #fef2f2;
+        }
+
+        .approval-card.pending {
+            border-left: 4px solid #f59e0b;
+            background: #fffbeb;
+        }
+
+        .approval-card.approved {
+            border-left: 4px solid #10b981;
+            background: #f0fdf4;
+        }
+
+        .approval-card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 1rem;
+        }
+
+        .approval-card-title {
+            font-weight: 700;
+            color: #1e293b;
+            font-size: 1rem;
+            margin-bottom: 0.25rem;
+        }
+
+        .approval-card-type {
+            font-size: 0.75rem;
+            color: #64748b;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            font-weight: 600;
+        }
+
+        .approval-card-status {
+            padding: 0.375rem 0.75rem;
+            border-radius: 8px;
+            font-size: 0.75rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.025em;
+        }
+
+        .approval-card-details {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 0.75rem;
+            margin-bottom: 1rem;
+        }
+
+        .approval-detail-item {
+            display: flex;
+            flex-direction: column;
+            gap: 0.25rem;
+        }
+
+        .approval-detail-label {
+            font-size: 0.75rem;
+            color: #64748b;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        .approval-detail-value {
+            font-size: 0.875rem;
+            color: #1e293b;
+            font-weight: 600;
+        }
+
+        .approval-card-actions {
+            display: flex;
+            gap: 0.5rem;
+            flex-wrap: wrap;
+        }
+
+        .approval-action-btn {
+            padding: 0.5rem 1rem;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 0.75rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.025em;
+            transition: all 0.2s;
+        }
+
+        .approval-action-btn.resend {
+            background: #e0e7ff;
+            color: #3730a3;
+        }
+
+        .approval-action-btn.resend:hover {
+            background: #c7d2fe;
+            transform: translateY(-1px);
+        }
+
+        .approval-action-btn.edit {
+            background: #fef3c7;
+            color: #92400e;
+        }
+
+        .approval-action-btn.edit:hover {
+            background: #fde68a;
+            transform: translateY(-1px);
+        }
+
+        .approval-action-btn:disabled {
+            background: #f3f4f6;
+            color: #9ca3af;
+            cursor: not-allowed;
+        }
+
+        /* Valuation Content */
+        .valuation-content {
+            padding: 1.5rem;
+        }
+
+        .metrics-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .metric-card {
+            background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%);
+            padding: 1.5rem;
+            border-radius: 12px;
+            text-align: center;
+            border: 1px solid #e2e8f0;
+            transition: transform 0.2s, box-shadow 0.2s;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .metric-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+        }
+
+        .metric-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 3px;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+        }
+
+        .metric-label {
+            font-size: 0.875rem;
+            color: #64748b;
+            margin-bottom: 0.75rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        .metric-value {
+            font-size: 2rem;
+            font-weight: 800;
+            color: #1e293b;
+            margin-bottom: 0.5rem;
+            text-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+        }
+
+        .metric-description {
+            font-size: 0.75rem;
+            color: #64748b;
+            line-height: 1.4;
+        }
+
+        .tier-progress {
+            background: white;
+            padding: 2rem;
+            border-radius: 12px;
+            border: 1px solid #e2e8f0;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+        }
+
+        .progress-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1rem;
+        }
+
+        .progress-label {
+            font-weight: 700;
+            font-size: 1.125rem;
+            color: #1e293b;
+        }
+
+        .current-tier {
+            background: linear-gradient(135deg, #fbbf24, #f59e0b);
+            color: white;
+            padding: 0.5rem 1rem;
+            border-radius: 25px;
+            font-size: 0.875rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        .progress-bar-container {
+            margin-bottom: 1rem;
+        }
+
+        .progress-bar {
+            background: #e2e8f0;
+            height: 12px;
+            border-radius: 6px;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .progress-fill {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            height: 100%;
+            transition: width 0.3s ease;
+            position: relative;
+        }
+
+        .progress-fill::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
+            animation: shimmer 2s infinite;
+        }
+
+        @keyframes shimmer {
+            0% { transform: translateX(-100%); }
+            100% { transform: translateX(100%); }
+        }
+
+        .progress-text {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1rem;
+        }
+
+        .progress-percentage {
+            font-size: 1.25rem;
+            font-weight: 700;
+            color: #667eea;
+        }
+
+        .next-tier {
+            font-size: 0.875rem;
+            color: #64748b;
+            font-weight: 600;
+        }
+
+        .unlock-criteria {
+            background: #f8fafc;
+            padding: 1rem;
+            border-radius: 8px;
+            border-left: 4px solid #667eea;
+        }
+
+        .unlock-criteria-title {
+            font-weight: 600;
+            color: #1e293b;
+            margin-bottom: 0.5rem;
+        }
+
+        .unlock-criteria-list {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        .unlock-criteria-item {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.25rem 0;
+            font-size: 0.875rem;
+            color: #64748b;
+        }
+
+        .unlock-criteria-item.completed {
+            color: #166534;
+        }
+
+        .unlock-criteria-item.completed::before {
+            content: '✓';
+            color: #10b981;
+            font-weight: 700;
+        }
+
+        .unlock-criteria-item.pending::before {
+            content: '○';
+            color: #64748b;
+            font-weight: 700;
+        }
+
+        /* Fan Guard Fund integration */
+        .fan-guard-integration {
+            background: linear-gradient(135deg, #2d5a4a 0%, #1e3a8a 100%);
+            color: white;
+            padding: 2rem;
+            border-radius: 16px;
+            margin-bottom: 2rem;
+            text-align: center;
+            box-shadow: 0 8px 25px rgba(45, 90, 74, 0.3);
+            border: 2px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .fan-guard-integration h3 {
+            margin: 0 0 0.75rem 0;
+            font-size: 1.5rem;
+            font-weight: 700;
+        }
+
+        .fan-guard-integration p {
+            margin: 0 0 1.5rem 0;
+            opacity: 0.95;
+            font-size: 1rem;
+            line-height: 1.6;
+        }
+
+        .fan-guard-integration .btn {
+            background: white;
+            color: #2d5a4a;
+            font-weight: 700;
+            padding: 0.75rem 1.5rem;
+            font-size: 1rem;
+            border-radius: 10px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+        }
+
+        .fan-guard-integration .btn:hover {
+            background: #f8fafc;
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.2);
+        }
+
+        /* Requests Alerts Section */
+        .requests-alerts {
+            background: white;
+            border-radius: 12px;
+            border: 1px solid #e2e8f0;
+            padding: 1.5rem;
+            margin-bottom: 1.5rem;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+        }
+
+        .requests-alerts h4 {
+            font-size: 1rem;
+            font-weight: 700;
+            color: #1e293b;
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .requests-alerts h4 i {
+            color: #f59e0b;
+        }
+
+        .alert-item {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            padding: 1rem;
+            border-radius: 8px;
+            margin-bottom: 0.75rem;
+            border-left: 4px solid;
+        }
+
+        .alert-item.urgent {
+            background: #fef2f2;
+            border-left-color: #ef4444;
+        }
+
+        .alert-item.warning {
+            background: #fffbeb;
+            border-left-color: #f59e0b;
+        }
+
+        .alert-icon {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1rem;
+        }
+
+        .alert-item.urgent .alert-icon {
+            background: #fee2e2;
+            color: #dc2626;
+        }
+
+        .alert-item.warning .alert-icon {
+            background: #fef3c7;
+            color: #d97706;
+        }
+
+        .alert-content {
+            flex: 1;
+        }
+
+        .alert-title {
+            font-weight: 600;
+            color: #1e293b;
+            font-size: 0.875rem;
+            margin-bottom: 0.25rem;
+        }
+
+        .alert-message {
+            color: #64748b;
+            font-size: 0.75rem;
+            line-height: 1.4;
+        }
+
+        .alert-action {
+            flex-shrink: 0;
+        }
+
+        .btn-sm {
+            padding: 0.375rem 0.75rem;
+            font-size: 0.75rem;
+            font-weight: 600;
+        }
+
+        /* NILE Logo in Fan Guard Fund */
+        .nile-logo-large {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .nile-symbol-large {
+            position: relative;
+            width: 80px;
+            height: 80px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .triangle-outer-large {
+            position: absolute;
+            top: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 0;
+            height: 0;
+            border-left: 40px solid transparent;
+            border-right: 40px solid transparent;
+            border-bottom: 70px solid white;
+        }
+
+        .triangle-inner-large {
+            position: absolute;
+            top: 16px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 0;
+            height: 0;
+            border-left: 24px solid transparent;
+            border-right: 24px solid transparent;
+            border-bottom: 40px solid white;
+        }
+
+        .triangle-inner-large::before {
+            content: '';
+            position: absolute;
+            top: 40px;
+            left: -16px;
+            width: 32px;
+            height: 6px;
+            background: white;
+        }
+
+        .triangle-inner-large::after {
+            content: '';
+            position: absolute;
+            top: 40px;
+            right: -16px;
+            width: 32px;
+            height: 6px;
+            background: white;
+        }
+
+        .nile-text-large {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            font-size: 1.25rem;
+            font-weight: 800;
+            letter-spacing: 0.15em;
+            color: white;
+            text-align: center;
+            text-transform: uppercase;
+            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+        }
+
+        /* Modal */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 1000;
+        }
+
+        .modal.active {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .modal-content {
+            background: white;
+            border-radius: 12px;
+            max-width: 500px;
+            width: 90%;
+            max-height: 90vh;
+            overflow-y: auto;
+        }
+
+        .modal-header {
+            padding: 1.5rem;
+            border-bottom: 1px solid #e2e8f0;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .modal-header h3 {
+            font-size: 1.25rem;
+            font-weight: 600;
+            margin: 0;
+        }
+
+        .modal-close {
+            background: none;
+            border: none;
+            font-size: 1.25rem;
+            cursor: pointer;
+            color: #64748b;
+        }
+
+        .modal-body {
+            padding: 1.5rem;
+        }
+
+        .modal-actions {
+            display: flex;
+            gap: 1rem;
+            margin-top: 1rem;
+        }
+
+        /* NILE INS Logo */
+        .nile-logo {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 0.75rem;
+            position: relative;
+            padding: 1.5rem;
+            background: linear-gradient(135deg, #2d5a4a 0%, #1e3a8a 100%);
+            border-radius: 12px;
+            margin-bottom: 1rem;
+        }
+
+        .nile-symbol {
+            position: relative;
+            width: 60px;
+            height: 60px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .triangle-outer {
+            position: absolute;
+            top: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 0;
+            height: 0;
+            border-left: 30px solid transparent;
+            border-right: 30px solid transparent;
+            border-bottom: 52px solid white;
+        }
+
+        .triangle-inner {
+            position: absolute;
+            top: 12px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 0;
+            height: 0;
+            border-left: 18px solid transparent;
+            border-right: 18px solid transparent;
+            border-bottom: 30px solid white;
+        }
+
+        .triangle-inner::before {
+            content: '';
+            position: absolute;
+            top: 30px;
+            left: -12px;
+            width: 24px;
+            height: 4px;
+            background: white;
+        }
+
+        .triangle-inner::after {
+            content: '';
+            position: absolute;
+            top: 30px;
+            right: -12px;
+            width: 24px;
+            height: 4px;
+            background: white;
+        }
+
+        .nile-text {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            font-size: 1rem;
+            font-weight: 700;
+            letter-spacing: 0.1em;
+            color: white;
+            text-align: center;
+            text-transform: uppercase;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .header-content {
+                padding: 0 1rem;
+            }
+            
+            .dashboard-container {
+                padding: 1rem;
+            }
+            
+            .summary-bar {
+                grid-template-columns: 1fr;
+            }
+            
+            .widget-header {
+                flex-direction: column;
+                gap: 1rem;
+                align-items: flex-start;
+            }
+            
+            .widget-actions {
+                flex-wrap: wrap;
+            }
+            
+            .tab-group {
+                flex-wrap: wrap;
+            }
+            
+            .tab {
+                padding: 0.75rem 1rem;
+            }
+            
+            table {
+                font-size: 0.75rem;
+            }
+            
+            th, td {
+                padding: 0.5rem;
+            }
+            
+            .metrics-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+
+        @media (max-width: 480px) {
+            .metrics-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .summary-content {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+            
+            .user-info {
+                flex-direction: column;
+                gap: 0.5rem;
+            }
+        }
+
+        /* Alerts System */
+        .alerts-container {
+            position: fixed;
+            top: 80px;
+            right: 20px;
+            z-index: 1000;
+            max-width: 400px;
+            width: 100%;
+        }
+
+        .alert {
+            background: white;
+            border-radius: 12px;
+            padding: 1rem;
+            margin-bottom: 0.75rem;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+            border-left: 4px solid;
+            animation: slideIn 0.3s ease;
+        }
+
+        .alert.renewal {
+            border-left-color: #f59e0b;
+            background: #fffbeb;
+        }
+
+        .alert.conflict {
+            border-left-color: #ef4444;
+            background: #fef2f2;
+        }
+
+        .alert.metadata {
+            border-left-color: #3b82f6;
+            background: #eff6ff;
+        }
+
+        .alert.success {
+            border-left-color: #10b981;
+            background: #f0fdf4;
+        }
+
+        .alert-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 0.5rem;
+        }
+
+        .alert-title {
+            font-weight: 700;
+            font-size: 0.875rem;
+            color: #1e293b;
+        }
+
+        .alert-close {
+            background: none;
+            border: none;
+            color: #64748b;
+            cursor: pointer;
+            font-size: 1rem;
+        }
+
+        .alert-message {
+            font-size: 0.875rem;
+            color: #475569;
+            margin-bottom: 0.75rem;
+            line-height: 1.4;
+        }
+
+        .alert-actions {
+            display: flex;
+            gap: 0.5rem;
+        }
+
+        .alert-btn {
+            padding: 0.375rem 0.75rem;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 0.75rem;
+            font-weight: 600;
+            transition: all 0.2s;
+        }
+
+        .alert-btn.primary {
+            background: #667eea;
+            color: white;
+        }
+
+        .alert-btn.secondary {
+            background: #f1f5f9;
+            color: #475569;
+            border: 1px solid #e2e8f0;
+        }
+
+        .alert-btn:hover {
+            transform: translateY(-1px);
+        }
+
+        @keyframes slideIn {
+            from {
+                transform: translateX(100%);
+                opacity: 0;
+            }
+            to {
+                transform: translateX(0);
+                opacity: 1;
+            }
+        }
+
+        /* Join Waitlist Styling */
+        .join-content {
+            padding: 2rem;
+        }
+
+        .join-hero {
+            text-align: center;
+            margin-bottom: 3rem;
+            padding: 2rem;
+            background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%);
+            border-radius: 16px;
+            border: 1px solid #e2e8f0;
+        }
+
+        .join-hero h3 {
+            font-size: 2rem;
+            font-weight: 700;
+            color: #1e293b;
+            margin: 1rem 0;
+        }
+
+        .join-hero p {
+            font-size: 1.125rem;
+            color: #64748b;
+            line-height: 1.6;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        .waitlist-form-container {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 3rem;
+            align-items: start;
+        }
+
+        .blocksurvey-embed {
+            background: white;
+            border-radius: 16px;
+            border: 1px solid #e2e8f0;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+            overflow: hidden;
+        }
+
+        .blocksurvey-embed embed {
+            display: block;
+            width: 100%;
+            min-height: 50vh;
+            border: none;
+            border-radius: 12px;
+        }
+
+        .waitlist-form {
+            background: white;
+            padding: 2rem;
+            border-radius: 16px;
+            border: 1px solid #e2e8f0;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+        }
+
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        .form-group label {
+            display: block;
+            font-weight: 600;
+            color: #374151;
+            margin-bottom: 0.5rem;
+            font-size: 0.875rem;
+        }
+
+        .form-group input,
+        .form-group select,
+        .form-group textarea {
+            width: 100%;
+            padding: 0.75rem;
+            border: 2px solid #e2e8f0;
+            border-radius: 8px;
+            font-size: 0.875rem;
+            transition: border-color 0.2s, box-shadow 0.2s;
+            background: white;
+        }
+
+        .form-group input:focus,
+        .form-group select:focus,
+        .form-group textarea:focus {
+            outline: none;
+            border-color: #2d5a4a;
+            box-shadow: 0 0 0 3px rgba(45, 90, 74, 0.1);
+        }
+
+        .form-group textarea {
+            resize: vertical;
+            min-height: 100px;
+        }
+
+        .checkbox-group {
+            margin-bottom: 1rem;
+        }
+
+        .checkbox-label {
+            display: flex;
+            align-items: flex-start;
+            gap: 0.75rem;
+            cursor: pointer;
+            font-size: 0.875rem;
+            line-height: 1.5;
+        }
+
+        .checkbox-label input[type="checkbox"] {
+            width: auto;
+            margin: 0;
+            opacity: 0;
+            position: absolute;
+        }
+
+        .checkmark {
+            width: 20px;
+            height: 20px;
+            border: 2px solid #e2e8f0;
+            border-radius: 4px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.2s;
+            flex-shrink: 0;
+            margin-top: 2px;
+        }
+
+        .checkbox-label input[type="checkbox"]:checked + .checkmark {
+            background: #2d5a4a;
+            border-color: #2d5a4a;
+        }
+
+        .checkbox-label input[type="checkbox"]:checked + .checkmark::after {
+            content: '✓';
+            color: white;
+            font-size: 12px;
+            font-weight: 700;
+        }
+
+        .checkbox-label a {
+            color: #2d5a4a;
+            text-decoration: underline;
+        }
+
+        .checkbox-label a:hover {
+            color: #1e3a8a;
+        }
+
+        .submit-btn {
+            width: 100%;
+            padding: 1rem;
+            font-size: 1rem;
+            font-weight: 700;
+            background: linear-gradient(135deg, #2d5a4a 0%, #1e3a8a 100%);
+            color: white;
+            border: none;
+            border-radius: 12px;
+            cursor: pointer;
+            transition: all 0.2s;
+            box-shadow: 0 4px 12px rgba(45, 90, 74, 0.3);
+        }
+
+        .submit-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(45, 90, 74, 0.4);
+        }
+
+        .submit-btn:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .waitlist-benefits {
+            background: linear-gradient(135deg, #2d5a4a 0%, #1e3a8a 100%);
+            color: white;
+            padding: 2rem;
+            border-radius: 16px;
+            box-shadow: 0 8px 25px rgba(45, 90, 74, 0.3);
+        }
+
+        .waitlist-benefits h4 {
+            font-size: 1.25rem;
+            font-weight: 700;
+            margin-bottom: 1.5rem;
+            text-align: center;
+        }
+
+        .waitlist-benefits ul {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        .waitlist-benefits li {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            padding: 0.75rem 0;
+            font-size: 0.875rem;
+            line-height: 1.5;
+        }
+
+        .waitlist-benefits li i {
+            color: #fbbf24;
+            font-size: 1rem;
+            width: 20px;
+            text-align: center;
+        }
+
+        /* Form Validation States */
+        .form-group input:invalid,
+        .form-group select:invalid,
+        .form-group textarea:invalid {
+            border-color: #ef4444;
+        }
+
+        .form-group input:valid,
+        .form-group select:valid,
+        .form-group textarea:valid {
+            border-color: #10b981;
+        }
+
+        /* Success Message */
+        .success-message {
+            background: #f0fdf4;
+            border: 2px solid #10b981;
+            color: #166534;
+            padding: 1.5rem;
+            border-radius: 12px;
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+
+        .success-message h4 {
+            font-size: 1.25rem;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+        }
+
+        .success-message p {
+            font-size: 0.875rem;
+            margin: 0;
+        }
+
+        /* Responsive Design for Join Page */
+        @media (max-width: 768px) {
+            .waitlist-form-container {
+                grid-template-columns: 1fr;
+                gap: 2rem;
+            }
+            
+            .join-hero h3 {
+                font-size: 1.5rem;
+            }
+            
+            .join-hero p {
+                font-size: 1rem;
+            }
+            
+            .blocksurvey-embed embed {
+                min-height: 40vh;
+            }
+            
+            .waitlist-benefits {
+                padding: 1.5rem;
+            }
+        }
+
+        /* Utility Classes */
+        .text-center { text-align: center; }
+        .text-right { text-align: right; }
+        .font-bold { font-weight: 700; }
+        .font-semibold { font-weight: 600; }
+        .text-sm { font-size: 0.875rem; }
+        .text-xs { font-size: 0.75rem; }
+        .text-gray-500 { color: #64748b; }
+        .text-gray-600 { color: #475569; }
+        .text-green-600 { color: #059669; }
+        .text-red-600 { color: #dc2626; }
+        .text-yellow-600 { color: #d97706; }
+
+        .mb-1 { margin-bottom: 0.25rem; }
+        .mb-2 { margin-bottom: 0.5rem; }
+        .mb-4 { margin-bottom: 1rem; }
+        .mt-2 { margin-top: 0.5rem; }
+        .mt-4 { margin-top: 1rem; }
+
+        .p-2 { padding: 0.5rem; }
+        .p-4 { padding: 1rem; }
+
+        .rounded { border-radius: 0.375rem; }
+        .rounded-lg { border-radius: 0.5rem; }
+        .rounded-xl { border-radius: 0.75rem; }
+
+        .shadow-sm { box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05); }
+        .shadow { box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06); }
+        .shadow-lg { box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05); }
+    </style>
+</head>
+<body>
+    <div class="app-container">
+        <!-- Header -->
+        <header class="header">
+            <div class="header-content">
+                <div class="logo">
+                    <i class="fas fa-shield-alt"></i>
+                    <span>MAPA IP Locker</span>
+                </div>
+                <div class="user-info">
+                    <div class="user-avatar">
+                        <i class="fas fa-user"></i>
+                    </div>
+                    <div class="user-details">
+                        <span class="user-name">Alex Johnson</span>
+                        <span class="user-role" id="userRole">Athlete</span>
+                    </div>
+                    <button class="role-switch" id="roleSwitch">
+                        <i class="fas fa-exchange-alt"></i>
+                    </button>
+                </div>
+            </div>
+        </header>
+
+        <!-- Dashboard Container -->
+        <div class="dashboard-container">
+            <!-- Alerts Container -->
+            <div class="alerts-container" id="alertsContainer">
+                <!-- Alerts will be dynamically added here -->
+            </div>
+            <!-- Navigation Tabs -->
+            <nav class="nav-tabs" id="navTabs">
+                <!-- Athlete tabs -->
+                <div class="tab-group athlete-tabs">
+                    <button class="tab active" data-tab="timeline">IP Locker Timeline</button>
+                    <button class="tab" data-tab="assets">Assets & Rights</button>
+                    <button class="tab" data-tab="contracts">Contracts</button>
+                    <button class="tab" data-tab="approvals">Approvals</button>
+                    <button class="tab" data-tab="valuation">Valuation & Tier</button>
+                    <button class="tab" data-tab="requests">Requests Inbox</button>
+                    <button class="tab" data-tab="join">Join</button>
+                </div>
+                <!-- Vendor tabs -->
+                <div class="tab-group vendor-tabs" style="display: none;">
+                    <button class="tab active" data-tab="vendor-requests">Requests & Approvals</button>
+                    <button class="tab" data-tab="licensed-assets">Licensed Assets</button>
+                    <button class="tab" data-tab="campaign-analytics">Campaign Analytics</button>
+                    <button class="tab" data-tab="vendor-library">Vendor IP Library</button>
+                    <button class="tab" data-tab="integration-health">Integration Health</button>
+                    <button class="tab" data-tab="join">Join</button>
+                </div>
+            </nav>
+
+            <!-- Dashboard Content -->
+            <main class="dashboard-content">
+                <!-- Athlete Dashboard -->
+                <div class="dashboard athlete-dashboard" id="athleteDashboard">
+                    <!-- Top Summary Bar -->
+                    <div class="summary-bar">
+                        <div class="summary-card">
+                            <div class="summary-label">Tier & Valuation</div>
+                            <div class="summary-content">
+                                <span class="tier-badge">Gold</span>
+                                <span class="valuation">$2.4M</span>
+                                <span class="delta positive">+12%</span>
+                            </div>
+                        </div>
+                        <div class="summary-card">
+                            <div class="summary-label">Contracts</div>
+                            <div class="summary-content">
+                                <span class="count active">8 Active</span>
+                                <span class="count pending">3 Pending Renewal</span>
+                                <span class="count expired">2 Expired</span>
+                            </div>
+                        </div>
+                        <div class="summary-card">
+                            <div class="summary-label">Assets</div>
+                            <div class="summary-content">
+                                <span class="count active">24 Total Tagged</span>
+                                <span class="count pending">5 Pending Approval</span>
+                                <span class="count expired">1 Rights Conflict</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- NILE Fan Guard Fund Section -->
+                    <div class="fan-guard-integration">
+                        <div class="nile-logo-large">
+                            <div class="nile-symbol-large">
+                                <div class="triangle-outer-large"></div>
+                                <div class="triangle-inner-large"></div>
+                            </div>
+                            <div class="nile-text-large">NILE INS</div>
+                        </div>
+                        <h3>NILE Fan Guard Fund</h3>
+                        <p>Fan Guard Fund is our upcoming feature that will allow fans to contribute cash, crypto, and other considerations directly to verified athletes. This creates a direct connection between athletes and their supporters, enabling:</p>
+                        <ul style="text-align: left; margin: 1rem 0; padding-left: 1.5rem;">
+                            <li>Direct financial support for training and equipment</li>
+                            <li>Verified athlete and donor verification system</li>
+                            <li>Transparent fund tracking and reporting that reflect true market dynamics for student-athlete fan support and protection</li>
+                        </ul>
+                        <button class="btn" onclick="openModal()">
+                            <i class="fas fa-shield-alt"></i> Learn More & Join Waitlist
+                        </button>
+                    </div>
+
+                    <!-- IP Locker Timeline -->
+                    <div class="widget" id="timelineWidget">
+                        <div class="widget-header">
+                            <h2>IP Locker Timeline</h2>
+                            <div class="widget-actions">
+                                <select class="filter-select" data-filter="type">
+                                    <option>All Types</option>
+                                    <option>Contract</option>
+                                    <option>Asset</option>
+                                    <option>Approval</option>
+                                </select>
+                                <select class="filter-select" data-filter="status">
+                                    <option>All Status</option>
+                                    <option>Active</option>
+                                    <option>Pending</option>
+                                    <option>Expired</option>
+                                    <option>Blocked</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="timeline-table">
+                            <table>
+                                <thead>
+                                    <tr>
+                                        <th>Date</th>
+                                        <th>Item Type</th>
+                                        <th>Title</th>
+                                        <th>Status</th>
+                                        <th>Linked Items</th>
+                                        <th>Actions</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="timelineTableBody">
+                                    <!-- Timeline data will be populated by JavaScript -->
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+
+                    <!-- Assets & Rights -->
+                    <div class="widget" id="assetsWidget" style="display: none;">
+                        <div class="widget-header">
+                            <h2>Assets & Rights</h2>
+                            <div class="widget-actions">
+                                <button class="btn btn-primary">
+                                    <i class="fas fa-upload"></i> Upload Asset
+                                </button>
+                                <button class="btn btn-secondary">
+                                    <i class="fas fa-tag"></i> Tag Rights
+                                </button>
+                                <button class="btn btn-secondary">
+                                    <i class="fas fa-user-shield"></i> Request Guardian Approval
+                                </button>
+                            </div>
+                        </div>
+                        <div class="assets-table">
+                            <table>
+                                <thead>
+                                    <tr>
+                                        <th>Asset Name</th>
+                                        <th>Rights</th>
+                                        <th>Expiration</th>
+                                        <th>Guardian Status</th>
+                                        <th>Linked Contracts</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="assetsTableBody">
+                                    <!-- Assets data will be populated by JavaScript -->
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+
+                    <!-- Contracts -->
+                    <div class="widget" id="contractsWidget" style="display: none;">
+                        <div class="widget-header">
+                            <h2>Contracts</h2>
+                            <div class="widget-actions">
+                                <button class="btn btn-primary">
+                                    <i class="fas fa-upload"></i> Upload Contract
+                                </button>
+                                <button class="btn btn-secondary">
+                                    <i class="fas fa-link"></i> Link Assets
+                                </button>
+                            </div>
+                        </div>
+                        <div class="contracts-table">
+                            <table>
+                                <thead>
+                                    <tr>
+                                        <th>Contract Name</th>
+                                        <th>Partner</th>
+                                        <th>Term Start-End</th>
+                                        <th>Status</th>
+                                        <th>Linked Assets</th>
+                                        <th>Next Action</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="contractsTableBody">
+                                    <!-- Contracts data will be populated by JavaScript -->
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+
+                    <!-- Approvals -->
+                    <div class="widget" id="approvalsWidget" style="display: none;">
+                        <div class="widget-header">
+                            <h2>Guardian Approvals</h2>
+                            <div class="widget-actions">
+                                <button class="btn btn-secondary">
+                                    <i class="fas fa-paper-plane"></i> Resend Approval
+                                </button>
+                                <button class="btn btn-secondary">
+                                    <i class="fas fa-edit"></i> Edit Rights
+                                </button>
+                            </div>
+                        </div>
+                        <div class="approvals-cards" id="approvalsCards">
+                            <!-- Approval cards will be populated by JavaScript -->
+                        </div>
+                    </div>
+
+                    <!-- Valuation & Tier -->
+                    <div class="widget" id="valuationWidget" style="display: none;">
+                        <div class="widget-header">
+                            <h2>Valuation & Tier</h2>
+                            <div class="widget-actions">
+                                <button class="btn btn-primary">
+                                    <i class="fas fa-download"></i> Download Valuation Report
+                                </button>
+                            </div>
+                        </div>
+                        <div class="valuation-content">
+                            <div class="metrics-grid">
+                                <div class="metric-card">
+                                    <div class="metric-label">Rights Ownership Index</div>
+                                    <div class="metric-value">87%</div>
+                                    <div class="metric-description">Percentage of assets with verified ownership</div>
+                                </div>
+                                <div class="metric-card">
+                                    <div class="metric-label">Verified Revenue Actions</div>
+                                    <div class="metric-value">156</div>
+                                    <div class="metric-description">Total monetization activities completed</div>
+                                </div>
+                                <div class="metric-card">
+                                    <div class="metric-label">Engagement Integrity</div>
+                                    <div class="metric-value">94%</div>
+                                    <div class="metric-description">Authentic engagement vs. bot activity</div>
+                                </div>
+                                <div class="metric-card">
+                                    <div class="metric-label">Composite NIL Value</div>
+                                    <div class="metric-value">$2.4M</div>
+                                    <div class="metric-description">Total estimated NIL valuation</div>
+                                </div>
+                            </div>
+                            <div class="tier-progress">
+                                <div class="progress-header">
+                                    <div class="progress-label">Progress to Platinum Tier</div>
+                                    <div class="current-tier">Gold</div>
+                                </div>
+                                <div class="progress-bar-container">
+                                    <div class="progress-bar">
+                                        <div class="progress-fill" style="width: 75%"></div>
+                                    </div>
+                                </div>
+                                <div class="progress-text">
+                                    <div class="progress-percentage">75% Complete</div>
+                                    <div class="next-tier">Next: Platinum Tier</div>
+                                </div>
+                                <div class="unlock-criteria">
+                                    <div class="unlock-criteria-title">Unlock Criteria for Platinum Tier:</div>
+                                    <ul class="unlock-criteria-list">
+                                        <li class="unlock-criteria-item completed">Complete 150+ verified revenue actions</li>
+                                        <li class="unlock-criteria-item completed">Maintain 90%+ engagement integrity</li>
+                                        <li class="unlock-criteria-item pending">Complete 3 more verified revenue actions</li>
+                                        <li class="unlock-criteria-item pending">Add 2 more exclusive asset rights</li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Requests Inbox -->
+                    <div class="widget" id="requestsWidget" style="display: none;">
+                        <div class="widget-header">
+                            <h2>Requests Inbox</h2>
+                            <div class="widget-actions">
+                                <button class="btn btn-primary" id="fanGuardFundBtn">
+                                    <i class="fas fa-shield-alt"></i> Fan Guard Fund
+                                </button>
+                            </div>
+                        </div>
+                        <div class="fan-guard-integration">
+                            <h3>Enhanced Protection Available</h3>
+                            <p>Fan Guard Fund is our upcoming feature that will allow fans to contribute cash, crypto, and other considerations directly to verified athletes. This creates a direct connection between athletes and their supporters, enabling direct financial support for training and equipment, verified athlete and donor verification system, and transparent fund tracking and reporting.</p>
+                            <button class="btn" onclick="openModal()">
+                                <i class="fas fa-shield-alt"></i> Learn More
+                            </button>
+                        </div>
+                        
+                        <!-- Alerts Section -->
+                        <div class="requests-alerts">
+                            <h4><i class="fas fa-exclamation-triangle"></i> Important Alerts</h4>
+                            <div class="alert-item urgent">
+                                <div class="alert-icon"><i class="fas fa-clock"></i></div>
+                                <div class="alert-content">
+                                    <div class="alert-title">Local Radio Deal Request Expires Soon</div>
+                                    <div class="alert-message">Response needed by Feb 04, 2025 - 3 days remaining</div>
+                                </div>
+                                <div class="alert-action">
+                                    <button class="btn btn-sm btn-primary">Respond Now</button>
+                                </div>
+                            </div>
+                            <div class="alert-item warning">
+                                <div class="alert-icon"><i class="fas fa-info-circle"></i></div>
+                                <div class="alert-content">
+                                    <div class="alert-title">Equipment Protection Coverage Update</div>
+                                    <div class="alert-message">New coverage options available for your equipment</div>
+                                </div>
+                                <div class="alert-action">
+                                    <button class="btn btn-sm btn-secondary">View Details</button>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="requests-table">
+                            <table>
+                                <thead>
+                                    <tr>
+                                        <th>Vendor</th>
+                                        <th>Asset Requested</th>
+                                        <th>Rights Scope</th>
+                                        <th>Duration</th>
+                                        <th>Due</th>
+                                        <th>Actions</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="requestsTableBody">
+                                    <!-- Requests data will be populated by JavaScript -->
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+
+                    <!-- Join Waitlist -->
+                    <div class="widget" id="joinWidget" style="display: none;">
+                        <div class="widget-header">
+                            <h2>Join NILE Fan Guard Fund</h2>
+                            <div class="widget-actions">
+                                <button class="btn btn-secondary" onclick="openModal()">
+                                    <i class="fas fa-info-circle"></i> Learn More
+                                </button>
+                            </div>
+                        </div>
+                        <div class="join-content">
+                            <div class="join-hero">
+                                <div class="nile-logo-large">
+                                    <div class="nile-symbol-large">
+                                        <div class="triangle-outer-large"></div>
+                                        <div class="triangle-inner-large"></div>
+                                    </div>
+                                    <div class="nile-text-large">NILE INS</div>
+                                </div>
+                                <h3>Join the NILE Fan Guard Fund Waitlist</h3>
+                                <p>Be among the first to access comprehensive protection for your intellectual property, equipment coverage, and enhanced monetization opportunities.</p>
+                            </div>
+                            
+                            <div class="waitlist-form-container">
+                                <div class="blocksurvey-embed">
+                                    <embed src="https://blocksurvey.io/mapanile-athlete-nil-intake-qrO7P.cAQEe2yMACIZTkZA?v=o" style="width:100%; height:50vh; border:none; border-radius:12px;">
+                                </div>
+                                
+                                <div class="waitlist-benefits">
+                                    <h4>What You'll Get:</h4>
+                                    <ul>
+                                        <li><i class="fas fa-shield-alt"></i> Comprehensive IP Protection</li>
+                                        <li><i class="fas fa-tools"></i> Equipment Coverage & Insurance</li>
+                                        <li><i class="fas fa-chart-line"></i> Enhanced Monetization Tools</li>
+                                        <li><i class="fas fa-gift"></i> Gift Management</li>
+                                        <li><i class="fas fa-headset"></i> Priority Support & Consultation</li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Vendor Dashboard -->
+                <div class="dashboard vendor-dashboard" id="vendorDashboard" style="display: none;">
+                    <!-- Top Summary Bar -->
+                    <div class="summary-bar">
+                        <div class="summary-card">
+                            <div class="summary-label">Integration Status</div>
+                            <div class="summary-content">
+                                <span class="status-badge healthy">Analytics</span>
+                                <span class="status-badge healthy">Payments</span>
+                            </div>
+                        </div>
+                        <div class="summary-card">
+                            <div class="summary-label">Licenses</div>
+                            <div class="summary-content">
+                                <span class="count active">12 Active</span>
+                                <span class="count pending">4 Pending Approval</span>
+                                <span class="count expired">3 Expired</span>
+                            </div>
+                        </div>
+                        <div class="summary-card">
+                            <div class="summary-label">Campaigns</div>
+                            <div class="summary-content">
+                                <span class="count active">8 Live</span>
+                                <span class="count pending">5 Scheduled</span>
+                                <span class="count">23 Completed</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- NILE Fan Guard Fund Section -->
+                    <div class="fan-guard-integration">
+                        <div class="nile-logo-large">
+                            <div class="nile-symbol-large">
+                                <div class="triangle-outer-large"></div>
+                                <div class="triangle-inner-large"></div>
+                            </div>
+                            <div class="nile-text-large">NILE INS</div>
+                        </div>
+                        <h3>NILE Fan Guard Fund</h3>
+                        <p>Fan Guard Fund is our upcoming feature that will allow fans to contribute cash, crypto, and other considerations directly to verified athletes. This creates a direct connection between athletes and their supporters, enabling:</p>
+                        <ul style="text-align: left; margin: 1rem 0; padding-left: 1.5rem;">
+                            <li>Direct financial support for training and equipment</li>
+                            <li>Verified athlete and donor verification system</li>
+                            <li>Transparent fund tracking and reporting that reflect true market dynamics for student-athlete fan support and protection</li>
+                        </ul>
+                        <button class="btn" onclick="openModal()">
+                            <i class="fas fa-shield-alt"></i> Learn More & Join Waitlist
+                        </button>
+                    </div>
+
+                    <!-- Requests & Approvals -->
+                    <div class="widget" id="vendorRequestsWidget">
+                        <div class="widget-header">
+                            <h2>Requests & Approvals</h2>
+                            <div class="widget-actions">
+                                <button class="btn btn-primary">
+                                    <i class="fas fa-search"></i> Find Athlete & Request Asset
+                                </button>
+                            </div>
+                        </div>
+                        <div class="vendor-requests-table">
+                            <table>
+                                <thead>
+                                    <tr>
+                                        <th>Athlete</th>
+                                        <th>Asset</th>
+                                        <th>Requested Rights</th>
+                                        <th>Duration</th>
+                                        <th>Status</th>
+                                        <th>SLA Countdown</th>
+                                        <th>Actions</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="vendorRequestsTableBody">
+                                    <!-- Vendor requests data will be populated by JavaScript -->
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+
+                    <!-- Licensed Assets -->
+                    <div class="widget" id="licensedAssetsWidget" style="display: none;">
+                        <div class="widget-header">
+                            <h2>Licensed Assets</h2>
+                            <div class="widget-actions">
+                                <button class="btn btn-primary">
+                                    <i class="fas fa-sync"></i> Renew License
+                                </button>
+                                <button class="btn btn-secondary">
+                                    <i class="fas fa-image"></i> Replace Creative
+                                </button>
+                            </div>
+                        </div>
+                        <div class="licensed-assets-table">
+                            <table>
+                                <thead>
+                                    <tr>
+                                        <th>Asset</th>
+                                        <th>Athlete</th>
+                                        <th>License Type</th>
+                                        <th>Start-End</th>
+                                        <th>Watermark</th>
+                                        <th>Compliance Status</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="licensedAssetsTableBody">
+                                    <!-- Licensed assets data will be populated by JavaScript -->
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+
+                    <!-- Campaign Analytics -->
+                    <div class="widget" id="campaignAnalyticsWidget" style="display: none;">
+                        <div class="widget-header">
+                            <h2>Campaign Analytics</h2>
+                            <div class="widget-actions">
+                                <button class="btn btn-primary">
+                                    <i class="fas fa-download"></i> Export CSV
+                                </button>
+                            </div>
+                        </div>
+                        <div class="analytics-cards">
+                            <div class="analytics-card">
+                                <div class="analytics-label">Impressions</div>
+                                <div class="analytics-value">2.4M</div>
+                                <div class="analytics-change positive">+15%</div>
+                            </div>
+                            <div class="analytics-card">
+                                <div class="analytics-label">CTR</div>
+                                <div class="analytics-value">3.2%</div>
+                                <div class="analytics-change positive">+8%</div>
+                            </div>
+                            <div class="analytics-card">
+                                <div class="analytics-label">Conversions</div>
+                                <div class="analytics-value">1,247</div>
+                                <div class="analytics-change positive">+22%</div>
+                            </div>
+                            <div class="analytics-card">
+                                <div class="analytics-label">Attribution</div>
+                                <div class="analytics-value">89%</div>
+                                <div class="analytics-change positive">+5%</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Vendor IP Library -->
+                    <div class="widget" id="vendorLibraryWidget" style="display: none;">
+                        <div class="widget-header">
+                            <h2>Vendor IP Library</h2>
+                            <div class="widget-actions">
+                                <button class="btn btn-primary">
+                                    <i class="fas fa-upload"></i> Upload Asset
+                                </button>
+                                <button class="btn btn-secondary">
+                                    <i class="fas fa-check-circle"></i> Verify Ownership
+                                </button>
+                            </div>
+                        </div>
+                        <div class="vendor-library-table">
+                            <table>
+                                <thead>
+                                    <tr>
+                                        <th>Logo/Visual</th>
+                                        <th>Type</th>
+                                        <th>Ownership Verified</th>
+                                        <th>Approved Uses</th>
+                                        <th>Linked Campaigns</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="vendorLibraryTableBody">
+                                    <!-- Vendor library data will be populated by JavaScript -->
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+
+                    <!-- Integration Health -->
+                    <div class="widget" id="integrationHealthWidget" style="display: none;">
+                        <div class="widget-header">
+                            <h2>Integration Health</h2>
+                        </div>
+                        <div class="integration-status">
+                            <div class="integration-item">
+                                <div class="integration-name">Analytics API</div>
+                                <div class="integration-status-badge healthy">Connected</div>
+                                <div class="integration-details">Last sync: 2 minutes ago</div>
+                            </div>
+                            <div class="integration-item">
+                                <div class="integration-name">Payments API</div>
+                                <div class="integration-status-badge healthy">Connected</div>
+                                <div class="integration-details">Last sync: 5 minutes ago</div>
+                            </div>
+                            <div class="integration-item">
+                                <div class="integration-name">Asset Management</div>
+                                <div class="integration-status-badge warning">Limited</div>
+                                <div class="integration-details">Some features unavailable</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Join Waitlist -->
+                    <div class="widget" id="vendorJoinWidget" style="display: none;">
+                        <div class="widget-header">
+                            <h2>Join NILE Fan Guard Fund</h2>
+                            <div class="widget-actions">
+                                <button class="btn btn-secondary" onclick="openModal()">
+                                    <i class="fas fa-info-circle"></i> Learn More
+                                </button>
+                            </div>
+                        </div>
+                        <div class="join-content">
+                            <div class="join-hero">
+                                <div class="nile-logo-large">
+                                    <div class="nile-symbol-large">
+                                        <div class="triangle-outer-large"></div>
+                                        <div class="triangle-inner-large"></div>
+                                    </div>
+                                    <div class="nile-text-large">NILE INS</div>
+                                </div>
+                                <h3>Join the NILE Fan Guard Fund Waitlist</h3>
+                                <p>Be among the first vendors to access comprehensive athlete protection services and enhanced partnership opportunities.</p>
+                            </div>
+                            
+                            <div class="waitlist-form-container">
+                                <div class="blocksurvey-embed">
+                                    <embed src="https://blocksurvey.io/mapanile-athlete-nil-intake-qrO7P.cAQEe2yMACIZTkZA?v=o" style="width:100%; height:50vh; border:none; border-radius:12px;">
+                                </div>
+                                
+                                <div class="waitlist-benefits">
+                                    <h4>What You'll Get:</h4>
+                                    <ul>
+                                        <li><i class="fas fa-handshake"></i> Access to Verified Athletes</li>
+                                        <li><i class="fas fa-shield-alt"></i> Protected Partnership Agreements</li>
+                                        <li><i class="fas fa-chart-line"></i> Enhanced Campaign Analytics</li>
+                                        <li><i class="fas fa-tools"></i> Equipment Coverage Services</li>
+                                        <li><i class="fas fa-gift"></i> Gift Management</li>
+                                        <li><i class="fas fa-headset"></i> Priority Support & Consultation</li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </main>
+        </div>
+
+        <!-- Fan Guard Fund Modal -->
+        <div class="modal" id="fanGuardModal">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h3>Fan Guard Fund</h3>
+                    <button class="modal-close" id="closeFanGuardModal">
+                        <i class="fas fa-times"></i>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div class="nile-logo">
+                        <div class="nile-symbol">
+                            <div class="triangle-outer"></div>
+                            <div class="triangle-inner"></div>
+                        </div>
+                        <div class="nile-text">NILE INS</div>
+                    </div>
+                    <p>Fan Guard Fund is our upcoming feature that will allow fans to contribute cash, crypto, and other considerations directly to verified athletes. This creates a direct connection between athletes and their supporters, enabling direct financial support for training and equipment, verified athlete and donor verification system, and transparent fund tracking and reporting.</p>
+                    <div class="modal-actions">
+                        <button class="btn btn-primary" onclick="window.open('https://blocksurvey.io/mapanile-athlete-nil-intake-qrO7P.cAQEe2yMACIZTkZA?v=o', '_blank')">Join Waitlist</button>
+                        <button class="btn btn-secondary">Learn More</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Mock Data
+        const mockData = {
+            athlete: {
+                timeline: [
+                    {
+                        date: '2024-01-15',
+                        type: 'Contract',
+                        title: 'Nike Endorsement Deal',
+                        status: 'Active',
+                        linkedItems: '3 Assets',
+                        actions: ['View', 'Renew']
+                    },
+                    {
+                        date: '2024-01-12',
+                        type: 'Asset',
+                        title: 'Training Video Series',
+                        status: 'Pending Approval',
+                        linkedItems: '1 Contract',
+                        actions: ['View', 'Share-disabled']
+                    },
+                    {
+                        date: '2024-01-10',
+                        type: 'Approval',
+                        title: 'Guardian Approval Required',
+                        status: 'Blocked',
+                        linkedItems: '2 Assets',
+                        actions: ['View', 'Resend']
+                    },
+                    {
+                        date: '2024-01-08',
+                        type: 'Contract',
+                        title: 'Gatorade Partnership',
+                        status: 'Expired',
+                        linkedItems: '1 Asset',
+                        actions: ['View', 'Renew']
+                    },
+                    {
+                        date: '2024-01-05',
+                        type: 'Asset',
+                        title: 'Social Media Content Package',
+                        status: 'Active',
+                        linkedItems: '2 Contracts',
+                        actions: ['View', 'Link', 'Share']
+                    }
+                ],
+                assets: [
+                    {
+                        name: 'Training Video Series',
+                        rights: 'Exclusive',
+                        expiration: '2025-12-31',
+                        guardianStatus: 'Required',
+                        linkedContracts: 1
+                    },
+                    {
+                        name: 'Social Media Content Package',
+                        rights: 'Shared',
+                        expiration: 'Indefinite',
+                        guardianStatus: 'Approved',
+                        linkedContracts: 2
+                    },
+                    {
+                        name: 'Podcast Interview',
+                        rights: 'Licensed',
+                        expiration: '2024-06-30',
+                        guardianStatus: 'N/A',
+                        linkedContracts: 1
+                    },
+                    {
+                        name: 'Photo Shoot Images',
+                        rights: 'Exclusive',
+                        expiration: '2026-01-01',
+                        guardianStatus: 'Required',
+                        linkedContracts: 3
+                    },
+                    {
+                        name: 'Merchandise Design',
+                        rights: 'Shared',
+                        expiration: 'Indefinite',
+                        guardianStatus: 'Approved',
+                        linkedContracts: 1
+                    }
+                ],
+                contracts: [
+                    {
+                        name: 'Nike Endorsement Deal',
+                        partner: 'Nike Inc.',
+                        termStart: '2023-01-01',
+                        termEnd: '2025-12-31',
+                        status: 'Active',
+                        linkedAssets: 3,
+                        nextAction: 'Renew by Dec 2025'
+                    },
+                    {
+                        name: 'Athlete NIL Rights',
+                        partner: 'College Collective',
+                        termStart: '2022-01-01',
+                        termEnd: '2023-12-31',
+                        status: 'Expired',
+                        linkedAssets: 1,
+                        nextAction: 'Link Assets'
+                    },
+                    {
+                        name: 'Athlete NIL Revenue-Share',
+                        partner: 'Institution',
+                        termStart: '2024-01-01',
+                        termEnd: '2024-12-31',
+                        status: 'Pending',
+                        linkedAssets: 0,
+                        nextAction: 'Pending Metadata'
+                    },
+                    {
+                        name: 'Athlete Equipment Protection',
+                        partner: 'Insurer',
+                        termStart: '2024-01-15',
+                        termEnd: '2024-06-15',
+                        status: 'Active',
+                        linkedAssets: 2,
+                        nextAction: 'Renew by May 2024'
+                    },
+                    {
+                        name: 'EA SPORTS Athlete Participation',
+                        partner: 'EA SPORTS College Football',
+                        termStart: '2025-05-01',
+                        termEnd: '2026-04-30',
+                        status: 'Active',
+                        linkedAssets: 3,
+                        nextAction: 'View / Download PDF'
+                    }
+                ],
+                approvals: [
+                    {
+                        asset: 'Training Video Series',
+                        submitted: '2024-01-12',
+                        expires: '2024-01-19',
+                        status: 'Pending'
+                    },
+                    {
+                        asset: 'Photo Shoot Images',
+                        submitted: '2024-01-08',
+                        expires: '2024-01-15',
+                        status: 'Blocked'
+                    },
+                    {
+                        contract: 'Under Armour Sponsorship',
+                        submitted: '2024-01-05',
+                        expires: '2024-01-12',
+                        status: 'Approved'
+                    }
+                ],
+                requests: [
+                    {
+                        vendor: 'Sports Illustrated',
+                        assetRequested: 'Training Video Series',
+                        rightsScope: 'Editorial Use',
+                        duration: '30 days',
+                        due: '2024-01-20',
+                        actions: ['Approve', 'Deny', 'View Vendor']
+                    },
+                    {
+                        vendor: 'Local Radio Deal',
+                        assetRequested: 'Photo Shoot Images',
+                        rightsScope: 'Promotional Use',
+                        duration: '60 days',
+                        due: '2025-02-04',
+                        actions: ['Approve', 'Deny', 'View Vendor']
+                    },
+                    {
+                        vendor: 'Athlete Equipment Protection',
+                        assetRequested: 'Equipment Coverage Request',
+                        rightsScope: 'Insurance Coverage',
+                        duration: '365 days',
+                        due: '2024-01-22',
+                        actions: ['Approve', 'Deny', 'View Vendor']
+                    }
+                ]
+            },
+            vendor: {
+                requests: [
+                    {
+                        athlete: 'Alex Johnson',
+                        asset: 'Training Video Series',
+                        requestedRights: 'Editorial Use',
+                        duration: '30 days',
+                        status: 'Pending',
+                        slaCountdown: '3 days',
+                        actions: ['Edit Request', 'Withdraw']
+                    },
+                    {
+                        athlete: 'Sarah Williams',
+                        asset: 'Photo Shoot Images',
+                        requestedRights: 'Digital Media',
+                        duration: '90 days',
+                        status: 'Approved',
+                        slaCountdown: 'N/A',
+                        actions: ['View License']
+                    },
+                    {
+                        athlete: 'Mike Chen',
+                        asset: 'Social Media Content',
+                        requestedRights: 'Marketing Campaign',
+                        duration: '60 days',
+                        status: 'Denied',
+                        slaCountdown: 'N/A',
+                        actions: ['Resubmit']
+                    }
+                ],
+                licensedAssets: [
+                    {
+                        asset: 'Training Video Series',
+                        athlete: 'Alex Johnson',
+                        licenseType: 'Exclusive',
+                        start: '2024-01-15',
+                        end: '2024-02-15',
+                        watermark: true,
+                        complianceStatus: 'Compliant'
+                    },
+                    {
+                        asset: 'Photo Shoot Images',
+                        athlete: 'Sarah Williams',
+                        licenseType: 'Shared',
+                        start: '2024-01-10',
+                        end: '2024-04-10',
+                        watermark: true,
+                        complianceStatus: 'Compliant'
+                    },
+                    {
+                        asset: 'Podcast Interview',
+                        athlete: 'Mike Chen',
+                        licenseType: 'Licensed',
+                        start: '2023-12-01',
+                        end: '2024-01-01',
+                        watermark: false,
+                        complianceStatus: 'Expired'
+                    }
+                ],
+                vendorLibrary: [
+                    {
+                        logo: 'Company Logo',
+                        type: 'Brand Asset',
+                        ownershipVerified: 'Yes',
+                        approvedUses: 'Marketing, Advertising',
+                        linkedCampaigns: 5
+                    },
+                    {
+                        logo: 'Product Image',
+                        type: 'Product Visual',
+                        ownershipVerified: 'Yes',
+                        approvedUses: 'E-commerce, Social Media',
+                        linkedCampaigns: 3
+                    },
+                    {
+                        logo: 'Event Banner',
+                        type: 'Event Material',
+                        ownershipVerified: 'No',
+                        approvedUses: 'Event Promotion',
+                        linkedCampaigns: 1
+                    }
+                ]
+            }
+        };
+
+        // Application State
+        let currentRole = 'athlete';
+        let currentTab = 'timeline';
+        let alerts = [];
+
+        // DOM Elements
+        const roleSwitch = document.getElementById('roleSwitch');
+        const userRole = document.getElementById('userRole');
+        const athleteDashboard = document.getElementById('athleteDashboard');
+        const vendorDashboard = document.getElementById('vendorDashboard');
+        const athleteTabs = document.querySelector('.athlete-tabs');
+        const vendorTabs = document.querySelector('.vendor-tabs');
+        const fanGuardModal = document.getElementById('fanGuardModal');
+        const closeFanGuardModal = document.getElementById('closeFanGuardModal');
+        const alertsContainer = document.getElementById('alertsContainer');
+
+        // Initialize Application
+        document.addEventListener('DOMContentLoaded', function() {
+            initializeApp();
+            setupEventListeners();
+            populateDashboard();
+            initializeAlerts();
+        });
+
+        function initializeApp() {
+            updateRoleDisplay();
+            updateTabDisplay();
+        }
+
+        function setupEventListeners() {
+            // Role switching
+            roleSwitch.addEventListener('click', toggleRole);
+            
+            // Tab switching
+            document.querySelectorAll('.tab').forEach(tab => {
+                tab.addEventListener('click', function() {
+                    const tabName = this.dataset.tab;
+                    switchTab(tabName);
+                });
+            });
+            
+            // Modal handling
+            closeFanGuardModal.addEventListener('click', closeModal);
+            fanGuardModal.addEventListener('click', function(e) {
+                if (e.target === fanGuardModal) {
+                    closeModal();
+                }
+            });
+            
+            // Fan Guard Fund button
+            const fanGuardFundBtn = document.getElementById('fanGuardFundBtn');
+            if (fanGuardFundBtn) {
+                fanGuardFundBtn.addEventListener('click', openModal);
+            }
+        }
+
+        function toggleRole() {
+            currentRole = currentRole === 'athlete' ? 'vendor' : 'athlete';
+            updateRoleDisplay();
+            updateTabDisplay();
+            populateDashboard();
+        }
+
+        function updateRoleDisplay() {
+            userRole.textContent = currentRole === 'athlete' ? 'Athlete' : 'Vendor';
+            
+            if (currentRole === 'athlete') {
+                athleteDashboard.style.display = 'block';
+                vendorDashboard.style.display = 'none';
+                athleteTabs.style.display = 'flex';
+                vendorTabs.style.display = 'none';
+            } else {
+                athleteDashboard.style.display = 'none';
+                vendorDashboard.style.display = 'block';
+                athleteTabs.style.display = 'none';
+                vendorTabs.style.display = 'flex';
+            }
+        }
+
+        function updateTabDisplay() {
+            // Reset all tabs
+            document.querySelectorAll('.tab').forEach(tab => {
+                tab.classList.remove('active');
+            });
+            
+            // Set active tab based on role
+            if (currentRole === 'athlete') {
+                const activeTab = document.querySelector(`[data-tab="${currentTab}"]`);
+                if (activeTab) {
+                    activeTab.classList.add('active');
+                }
+            } else {
+                const vendorActiveTab = document.querySelector('.vendor-tabs .tab.active');
+                if (vendorActiveTab) {
+                    vendorActiveTab.classList.add('active');
+                }
+            }
+        }
+
+        function switchTab(tabName) {
+            currentTab = tabName;
+            
+            // Hide all widgets
+            document.querySelectorAll('.widget').forEach(widget => {
+                widget.style.display = 'none';
+            });
+            
+            // Show selected widget
+            const widgetId = tabName + 'Widget';
+            const widget = document.getElementById(widgetId);
+            if (widget) {
+                widget.style.display = 'block';
+            }
+            
+            // Update active tab
+            document.querySelectorAll('.tab').forEach(tab => {
+                tab.classList.remove('active');
+            });
+            
+            const activeTab = document.querySelector(`[data-tab="${tabName}"]`);
+            if (activeTab) {
+                activeTab.classList.add('active');
+            }
+            
+            // Populate widget data
+            populateWidget(tabName);
+        }
+
+        function populateDashboard() {
+            if (currentRole === 'athlete') {
+                populateWidget(currentTab);
+            } else {
+                populateWidget('vendor-requests');
+            }
+        }
+
+        function populateWidget(widgetName) {
+            switch (widgetName) {
+                case 'timeline':
+                    populateTimeline();
+                    break;
+                case 'assets':
+                    populateAssets();
+                    break;
+                case 'contracts':
+                    populateContracts();
+                    break;
+                case 'approvals':
+                    populateApprovals();
+                    break;
+                case 'requests':
+                    populateRequests();
+                    break;
+                case 'join':
+                    initializeJoinPage();
+                    break;
+                case 'vendor-requests':
+                    populateVendorRequests();
+                    break;
+                case 'licensed-assets':
+                    populateLicensedAssets();
+                    break;
+                case 'vendor-library':
+                    populateVendorLibrary();
+                    break;
+            }
+        }
+
+        function populateTimeline() {
+            const tbody = document.getElementById('timelineTableBody');
+            if (!tbody) return;
+            
+            tbody.innerHTML = '';
+            
+            mockData.athlete.timeline.forEach(item => {
+                const row = document.createElement('tr');
+                const actionButtons = item.actions.map(action => {
+                    const actionClass = action.toLowerCase().replace(' ', '-');
+                    return `<button class="action-btn ${actionClass}" data-action="${action}" data-item="${item.title}">${action}</button>`;
+                }).join('');
+                
+                row.innerHTML = `
+                    <td>${formatDate(item.date)}</td>
+                    <td><span class="status-${item.type.toLowerCase()}">${item.type}</span></td>
+                    <td><strong>${item.title}</strong></td>
+                    <td><span class="status-${item.status.toLowerCase()}">${item.status}</span></td>
+                    <td><span class="text-gray-600">${item.linkedItems}</span></td>
+                    <td>
+                        <div class="action-buttons">${actionButtons}</div>
+                    </td>
+                `;
+                tbody.appendChild(row);
+            });
+        }
+
+        function populateAssets() {
+            const tbody = document.getElementById('assetsTableBody');
+            if (!tbody) return;
+            
+            tbody.innerHTML = '';
+            
+            mockData.athlete.assets.forEach(asset => {
+                const row = document.createElement('tr');
+                const guardianStatusClass = asset.guardianStatus.toLowerCase().replace(' ', '-');
+                
+                row.innerHTML = `
+                    <td><strong>${asset.name}</strong></td>
+                    <td><span class="status-${asset.rights.toLowerCase()}">${asset.rights}</span></td>
+                    <td><span class="text-gray-600">${asset.expiration}</span></td>
+                    <td><span class="status-${guardianStatusClass}">${asset.guardianStatus}</span></td>
+                    <td><span class="text-gray-600">${asset.linkedContracts} contracts</span></td>
+                `;
+                tbody.appendChild(row);
+            });
+        }
+
+        function populateContracts() {
+            const tbody = document.getElementById('contractsTableBody');
+            if (!tbody) return;
+            
+            tbody.innerHTML = '';
+            
+            mockData.athlete.contracts.forEach(contract => {
+                const row = document.createElement('tr');
+                
+                row.innerHTML = `
+                    <td><strong>${contract.name}</strong></td>
+                    <td><span class="text-gray-600">${contract.partner}</span></td>
+                    <td><span class="text-gray-600">${formatDate(contract.termStart)} - ${formatDate(contract.termEnd)}</span></td>
+                    <td><span class="status-${contract.status.toLowerCase()}">${contract.status}</span></td>
+                    <td><span class="text-gray-600">${contract.linkedAssets} assets</span></td>
+                    <td><span class="text-gray-600">${contract.nextAction}</span></td>
+                `;
+                tbody.appendChild(row);
+            });
+        }
+
+        function populateApprovals() {
+            const container = document.getElementById('approvalsCards');
+            if (!container) return;
+            
+            container.innerHTML = '';
+            
+            mockData.athlete.approvals.forEach(approval => {
+                const card = document.createElement('div');
+                const assetOrContract = approval.asset || approval.contract;
+                const statusClass = approval.status.toLowerCase();
+                
+                card.className = `approval-card ${statusClass}`;
+                
+                card.innerHTML = `
+                    <div class="approval-card-header">
+                        <div>
+                            <div class="approval-card-title">${assetOrContract}</div>
+                            <div class="approval-card-type">${approval.asset ? 'Asset' : 'Contract'}</div>
+                        </div>
+                        <div class="approval-card-status status-${statusClass}">${approval.status}</div>
+                    </div>
+                    <div class="approval-card-details">
+                        <div class="approval-detail-item">
+                            <div class="approval-detail-label">Submitted</div>
+                            <div class="approval-detail-value">${formatDate(approval.submitted)}</div>
+                        </div>
+                        <div class="approval-detail-item">
+                            <div class="approval-detail-label">Expires</div>
+                            <div class="approval-detail-value">${formatDate(approval.expires)}</div>
+                        </div>
+                    </div>
+                `;
+                
+                container.appendChild(card);
+            });
+        }
+
+        function populateRequests() {
+            const tbody = document.getElementById('requestsTableBody');
+            if (!tbody) return;
+            
+            tbody.innerHTML = '';
+            
+            mockData.athlete.requests.forEach(request => {
+                const row = document.createElement('tr');
+                const actionButtons = request.actions.map(action => {
+                    const actionClass = action.toLowerCase().replace(' ', '-');
+                    return `<button class="action-btn ${actionClass}" data-action="${action}" data-vendor="${request.vendor}">${action}</button>`;
+                }).join('');
+                
+                row.innerHTML = `
+                    <td><strong>${request.vendor}</strong></td>
+                    <td><strong>${request.assetRequested}</strong></td>
+                    <td><span class="text-gray-600">${request.rightsScope}</span></td>
+                    <td><span class="text-gray-600">${request.duration}</span></td>
+                    <td><span class="text-gray-600">${formatDate(request.due)}</span></td>
+                    <td>
+                        <div class="action-buttons">${actionButtons}</div>
+                    </td>
+                `;
+                tbody.appendChild(row);
+            });
+        }
+
+        function populateVendorRequests() {
+            const tbody = document.getElementById('vendorRequestsTableBody');
+            if (!tbody) return;
+            
+            tbody.innerHTML = '';
+            
+            mockData.vendor.requests.forEach(request => {
+                const row = document.createElement('tr');
+                const actionButtons = request.actions.map(action => {
+                    const actionClass = action.toLowerCase().replace(' ', '-');
+                    return `<button class="action-btn ${actionClass}" data-action="${action}" data-request="${request.asset}">${action}</button>`;
+                }).join('');
+                
+                row.innerHTML = `
+                    <td><strong>${request.athlete}</strong></td>
+                    <td><strong>${request.asset}</strong></td>
+                    <td><span class="text-gray-600">${request.requestedRights}</span></td>
+                    <td><span class="text-gray-600">${request.duration}</span></td>
+                    <td><span class="status-${request.status.toLowerCase()}">${request.status}</span></td>
+                    <td><span class="text-gray-600">${request.slaCountdown}</span></td>
+                    <td>
+                        <div class="action-buttons">${actionButtons}</div>
+                    </td>
+                `;
+                tbody.appendChild(row);
+            });
+        }
+
+        function populateLicensedAssets() {
+            const tbody = document.getElementById('licensedAssetsTableBody');
+            if (!tbody) return;
+            
+            tbody.innerHTML = '';
+            
+            mockData.vendor.licensedAssets.forEach(asset => {
+                const row = document.createElement('tr');
+                const watermarkStatus = asset.watermark ? 'Yes' : 'No';
+                
+                row.innerHTML = `
+                    <td><strong>${asset.asset}</strong></td>
+                    <td><span class="text-gray-600">${asset.athlete}</span></td>
+                    <td><span class="status-${asset.licenseType.toLowerCase()}">${asset.licenseType}</span></td>
+                    <td><span class="text-gray-600">${formatDate(asset.start)} - ${formatDate(asset.end)}</span></td>
+                    <td><span class="text-gray-600">${watermarkStatus}</span></td>
+                    <td><span class="status-${asset.complianceStatus.toLowerCase()}">${asset.complianceStatus}</span></td>
+                `;
+                tbody.appendChild(row);
+            });
+        }
+
+        function populateVendorLibrary() {
+            const tbody = document.getElementById('vendorLibraryTableBody');
+            if (!tbody) return;
+            
+            tbody.innerHTML = '';
+            
+            mockData.vendor.vendorLibrary.forEach(item => {
+                const row = document.createElement('tr');
+                
+                row.innerHTML = `
+                    <td><strong>${item.logo}</strong></td>
+                    <td><span class="text-gray-600">${item.type}</span></td>
+                    <td><span class="status-${item.ownershipVerified.toLowerCase()}">${item.ownershipVerified}</span></td>
+                    <td><span class="text-gray-600">${item.approvedUses}</span></td>
+                    <td><span class="text-gray-600">${item.linkedCampaigns} campaigns</span></td>
+                `;
+                tbody.appendChild(row);
+            });
+        }
+
+        function formatDate(dateString) {
+            const date = new Date(dateString);
+            return date.toLocaleDateString('en-US', {
+                year: 'numeric',
+                month: 'short',
+                day: 'numeric'
+            });
+        }
+
+        function openModal() {
+            fanGuardModal.classList.add('active');
+        }
+
+        function closeModal() {
+            fanGuardModal.classList.remove('active');
+        }
+
+        // Alerts Functions
+        function initializeAlerts() {
+            generateAlerts();
+            renderAlerts();
+        }
+
+        function generateAlerts() {
+            alerts = [
+                {
+                    id: 'premium-due-1',
+                    type: 'renewal',
+                    title: 'Premium Due',
+                    message: 'Athlete equipment insurance coverage expires in 5 days',
+                    actions: ['Renew Now', 'View Details'],
+                    timestamp: new Date()
+                },
+                {
+                    id: 'rights-conflict-1',
+                    type: 'conflict',
+                    title: 'Rights Conflict Detected',
+                    message: 'Training Video Series has conflicting usage rights',
+                    actions: ['Resolve Conflict', 'View Details'],
+                    timestamp: new Date()
+                },
+                {
+                    id: 'metadata-missing-1',
+                    type: 'metadata',
+                    title: 'Missing Metadata',
+                    message: 'Athlete NIL Revenue-Share contract missing required fields',
+                    actions: ['Complete Metadata', 'View Contract'],
+                    timestamp: new Date()
+                }
+            ];
+        }
+
+        function renderAlerts() {
+            if (!alertsContainer) return;
+            
+            alertsContainer.innerHTML = '';
+            
+            alerts.forEach(alert => {
+                const alertElement = document.createElement('div');
+                alertElement.className = `alert ${alert.type}`;
+                alertElement.innerHTML = `
+                    <div class="alert-header">
+                        <div class="alert-title">${alert.title}</div>
+                        <button class="alert-close" onclick="dismissAlert('${alert.id}')">
+                            <i class="fas fa-times"></i>
+                        </button>
+                    </div>
+                    <div class="alert-message">${alert.message}</div>
+                    <div class="alert-actions">
+                        ${alert.actions.map(action => 
+                            `<button class="alert-btn primary" onclick="handleAlertAction('${alert.id}', '${action}')">${action}</button>`
+                        ).join('')}
+                    </div>
+                `;
+                alertsContainer.appendChild(alertElement);
+            });
+        }
+
+        function dismissAlert(alertId) {
+            alerts = alerts.filter(alert => alert.id !== alertId);
+            renderAlerts();
+        }
+
+        function handleAlertAction(alertId, action) {
+            console.log(`Alert action: ${action} for alert: ${alertId}`);
+            // Handle specific alert actions
+            switch (action) {
+                case 'Renew Now':
+                    showNotification('success', 'Renewal process initiated');
+                    break;
+                case 'View Details':
+                    showNotification('info', 'Opening details...');
+                    break;
+                case 'Resolve Conflict':
+                    showNotification('warning', 'Conflict resolution workflow started');
+                    break;
+                case 'Complete Metadata':
+                    showNotification('info', 'Opening metadata form...');
+                    break;
+                default:
+                    showNotification('info', `Action: ${action}`);
+            }
+        }
+
+        function showNotification(type, message) {
+            // Simple notification system
+            const notification = document.createElement('div');
+            notification.style.cssText = `
+                position: fixed;
+                top: 20px;
+                left: 50%;
+                transform: translateX(-50%);
+                background: ${type === 'success' ? '#10b981' : type === 'warning' ? '#f59e0b' : '#3b82f6'};
+                color: white;
+                padding: 1rem 2rem;
+                border-radius: 8px;
+                z-index: 2000;
+                font-weight: 600;
+                box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+            `;
+            notification.textContent = message;
+            document.body.appendChild(notification);
+            
+            setTimeout(() => {
+                notification.remove();
+            }, 3000);
+        }
+
+        // Join Page Functions
+        function initializeJoinPage() {
+            // Initialize Blocksurvey embed
+            console.log('Join page initialized with Blocksurvey embed');
+        }
+
+        // Initialize with athlete dashboard
+        switchTab('timeline');
+    </script>
+</body>
+</html>
