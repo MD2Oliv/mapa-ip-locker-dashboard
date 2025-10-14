@@ -7,6 +7,7 @@ const inter = Inter({ subsets: ['latin'] })
 export const metadata: Metadata = {
   title: 'MAPA IP Locker Dashboard',
   description: 'Comprehensive dashboard for athlete intellectual property management and NILE Fan Guard Fund',
+  viewport: 'width=device-width, initial-scale=1',
 }
 
 export default function RootLayout({
