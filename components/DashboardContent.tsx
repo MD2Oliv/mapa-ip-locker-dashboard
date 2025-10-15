@@ -200,7 +200,7 @@ export default function DashboardContent({ currentRole, currentTab }: DashboardC
           </div>
           
           <div className="waitlist-benefits">
-            <h4>What You'll Get:</h4>
+            <h4>What You&apos;ll Get:</h4>
             <div className="benefits-grid">
               <div className="benefit-card">
                 <div className="benefit-icon">
