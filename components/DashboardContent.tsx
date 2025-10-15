@@ -201,13 +201,53 @@ export default function DashboardContent({ currentRole, currentTab }: DashboardC
           
           <div className="waitlist-benefits">
             <h4>What You'll Get:</h4>
-            <ul>
-              <li><i className="fas fa-shield-alt"></i> Comprehensive IP Protection</li>
-              <li><i className="fas fa-tools"></i> Equipment Coverage & Insurance</li>
-              <li><i className="fas fa-chart-line"></i> Enhanced Monetization Tools</li>
-              <li><i className="fas fa-gift"></i> Gift Management</li>
-              <li><i className="fas fa-headset"></i> Priority Support & Consultation</li>
-            </ul>
+            <div className="benefits-grid">
+              <div className="benefit-card">
+                <div className="benefit-icon">
+                  <i className="fas fa-shield-alt"></i>
+                </div>
+                <div className="benefit-content">
+                  <h5>Comprehensive IP Protection</h5>
+                  <p>Advanced intellectual property monitoring and protection services</p>
+                </div>
+              </div>
+              <div className="benefit-card">
+                <div className="benefit-icon">
+                  <i className="fas fa-tools"></i>
+                </div>
+                <div className="benefit-content">
+                  <h5>Equipment Coverage & Insurance</h5>
+                  <p>Full coverage for training equipment and athletic gear</p>
+                </div>
+              </div>
+              <div className="benefit-card">
+                <div className="benefit-icon">
+                  <i className="fas fa-chart-line"></i>
+                </div>
+                <div className="benefit-content">
+                  <h5>Enhanced Monetization Tools</h5>
+                  <p>Advanced analytics and revenue optimization features</p>
+                </div>
+              </div>
+              <div className="benefit-card">
+                <div className="benefit-icon">
+                  <i className="fas fa-gift"></i>
+                </div>
+                <div className="benefit-content">
+                  <h5>Gift Management</h5>
+                  <p>Streamlined fan contribution and gift tracking system</p>
+                </div>
+              </div>
+              <div className="benefit-card">
+                <div className="benefit-icon">
+                  <i className="fas fa-headset"></i>
+                </div>
+                <div className="benefit-content">
+                  <h5>Priority Support & Consultation</h5>
+                  <p>24/7 dedicated support and expert consultation services</p>
+                </div>
+              </div>
+            </div>
           </div>
         </div>
       </div>
@@ -331,21 +371,25 @@ export default function DashboardContent({ currentRole, currentTab }: DashboardC
         <div className="valuation-metrics">
           <div className="metric-card">
             <div className="metric-label">Rights Ownership Index</div>
+            <div className="metric-description">Percentage of assets with verified ownership</div>
             <div className="metric-value">87%</div>
             <div className="metric-delta positive">+5%</div>
           </div>
           <div className="metric-card">
             <div className="metric-label">Verified Revenue Actions</div>
+            <div className="metric-description">Total monetization activities completed</div>
             <div className="metric-value">$2.4M</div>
             <div className="metric-delta positive">+12%</div>
           </div>
           <div className="metric-card">
             <div className="metric-label">Engagement Integrity</div>
+            <div className="metric-description">Authentic Engagement</div>
             <div className="metric-value">94%</div>
             <div className="metric-delta positive">+3%</div>
           </div>
           <div className="metric-card">
             <div className="metric-label">Composite NIL Value</div>
+            <div className="metric-description">Total estimated NIL valuation</div>
             <div className="metric-value">$2.4M</div>
             <div className="metric-delta positive">+8%</div>
           </div>
@@ -356,6 +400,28 @@ export default function DashboardContent({ currentRole, currentTab }: DashboardC
             <div className="progress-fill" style={{ width: '75%' }}></div>
           </div>
           <p className="progress-text">75% complete - $600K more needed for Platinum</p>
+          
+          <div className="unlock-criteria">
+            <h5>Unlock Criteria for Platinum Tier:</h5>
+            <ul className="criteria-list">
+              <li className="criteria-item completed">
+                <i className="fas fa-check-circle"></i>
+                <span>Complete 150+ verified revenue actions</span>
+              </li>
+              <li className="criteria-item completed">
+                <i className="fas fa-check-circle"></i>
+                <span>Maintain 90%+ engagement integrity</span>
+              </li>
+              <li className="criteria-item pending">
+                <i className="fas fa-clock"></i>
+                <span>Complete 3 more verified revenue actions</span>
+              </li>
+              <li className="criteria-item pending">
+                <i className="fas fa-clock"></i>
+                <span>Add 2 more exclusive asset rights</span>
+              </li>
+            </ul>
+          </div>
         </div>
       </div>
     </div>

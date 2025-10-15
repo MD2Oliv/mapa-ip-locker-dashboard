@@ -38,3 +38,4 @@ echo "   git commit -m 'Fix Vercel build issues'"
 echo "   git push"
 echo ""
 echo "2. Redeploy on Vercel - the build should now succeed!"
+

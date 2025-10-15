@@ -1052,6 +1052,14 @@ tr:hover {
   font-weight: 600;
 }
 
+.metric-description {
+  font-size: 0.75rem;
+  color: #9ca3af;
+  margin-bottom: 0.75rem;
+  font-weight: 400;
+  line-height: 1.4;
+}
+
 .metric-value {
   font-size: 2rem;
   font-weight: 800;
@@ -1104,6 +1112,57 @@ tr:hover {
   font-size: 0.875rem;
   color: #64748b;
   margin: 0;
+}
+
+/* Unlock Criteria */
+.unlock-criteria {
+  margin-top: 1.5rem;
+  padding-top: 1.5rem;
+  border-top: 1px solid #e2e8f0;
+}
+
+.unlock-criteria h5 {
+  margin: 0 0 1rem 0;
+  font-size: 1rem;
+  font-weight: 600;
+  color: #1e293b;
+}
+
+.criteria-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.criteria-item {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.75rem 0;
+  font-size: 0.875rem;
+  font-weight: 500;
+}
+
+.criteria-item.completed {
+  color: #059669;
+}
+
+.criteria-item.completed i {
+  color: #059669;
+  font-size: 1rem;
+}
+
+.criteria-item.pending {
+  color: #d97706;
+}
+
+.criteria-item.pending i {
+  color: #d97706;
+  font-size: 1rem;
+}
+
+.criteria-item span {
+  flex: 1;
 }
 
 /* Requests Alerts */
@@ -1303,6 +1362,61 @@ tr:hover {
 .action-btn.withdraw:hover {
   background: #e5e7eb;
   transform: translateY(-1px);
+}
+
+/* Benefits Grid */
+.benefits-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 1.5rem;
+  margin-top: 1.5rem;
+}
+
+.benefit-card {
+  background: #f8fafc;
+  border: 1px solid #e2e8f0;
+  border-radius: 12px;
+  padding: 1.5rem;
+  transition: transform 0.2s, box-shadow 0.2s;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+}
+
+.benefit-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+.benefit-icon {
+  width: 60px;
+  height: 60px;
+  background: linear-gradient(135deg, #667eea, #764ba2);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 1rem;
+}
+
+.benefit-icon i {
+  font-size: 1.5rem;
+  color: white;
+}
+
+.benefit-content h5 {
+  margin: 0 0 0.75rem 0;
+  font-size: 1.125rem;
+  font-weight: 600;
+  color: #1e293b;
+}
+
+.benefit-content p {
+  margin: 0;
+  font-size: 0.875rem;
+  color: #64748b;
+  line-height: 1.5;
 }
 
 /* Utility Classes */
